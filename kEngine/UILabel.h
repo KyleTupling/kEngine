@@ -15,6 +15,8 @@ public:
 
 	int GetPosX() const;
 	int GetPosY() const;
+	int GetWidth() const;
+	int GetHeight() const;
 
 	void SetPosition(int x, int y);
 	void SetText(const std::string& text);

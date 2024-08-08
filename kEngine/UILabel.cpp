@@ -56,6 +56,16 @@ int UILabel::GetPosY() const
 	return rect.y;
 }
 
+int UILabel::GetWidth() const
+{
+	return rect.w;
+}
+
+int UILabel::GetHeight() const
+{
+	return rect.h;
+}
+
 void UILabel::SetPosition(int x, int y)
 {
 	rect.x = x;
