@@ -152,9 +152,6 @@ int main(int argv, char** args)
     Text bodyText(renderer, "Planet", bodyFont, static_cast<int>(body1.position.x), static_cast<int>(body1.position.y + body1.radius) + 10);
     std::string bodyInfoStr = to_string(body1.velocity.x);
 
-    Text bodyInfoText(renderer, bodyInfoStr, bodyFont, 200, 200);
-    bodyInfoText.setIsFixed(true);
-
     auto mainWindow = std::make_unique<UIWindow>(renderer, 100, 500, 400, 200, "Window Title", bodyFont);
     mainWindow->AddUIElement(std::make_unique<UIButton>(105, 570, 50, 20, "Test", bodyFont, colorGrey));
 
@@ -268,9 +265,6 @@ int main(int argv, char** args)
         if (body1.isHovered)
         {
             body1.colour[1] = 100;
-            bodyInfoText.setMessage(&to_string(body1.velocity.x)[0]);
-            bodyInfoText.Update();
-            bodyInfoText.Draw(camera, screenSize);
         }
         else {
             body1.colour[1] = 0;
