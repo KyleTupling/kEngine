@@ -11,6 +11,7 @@
 - [x] Implement primitive UI classes (Window, Button, Label, etc.)
 - [ ] Have UIElement give default constructor, getters and setters?
 - [ ] Create UIManager to handle UI updating, rendering
+- [ ] ***BUG*** When UIWindow close button is used and the window is then redisplayed, the close button retains hover state (only visual)
 
 ## Core Components
 - [x] Use distance scaling through world->screen conversions to allow for use of real physical values?
