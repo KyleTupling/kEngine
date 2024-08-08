@@ -139,9 +139,12 @@ int main(int argv, char** args)
 
     Camera camera(Vector2D(screenSize.x / 2, screenSize.y / 2), 1.0f);
 
+    // Initialise fonts
     TTF_Font* pausedFont = TTF_OpenFont("C:/Users/PC/Desktop/cpp/ARIAL.TTF", 20);
     TTF_Font* bodyFont = TTF_OpenFont("C:/Users/PC/Desktop/cpp/ARIAL.TTF", 18);
 
+    // Initialise Text
+    // Soon to be phased out and replaced by UILabel
     Text pausedText(renderer, "PAUSED", pausedFont, 1280 - 100, 50, { 255, 255, 255, 255 });
     pausedText.setIsFixed(true);
     SDL_Rect pausedRect{ pausedText.getPosX() - 50, pausedText.getPosY() - 20, 100, 40};
@@ -154,8 +157,6 @@ int main(int argv, char** args)
 
     auto mainWindow = std::make_unique<UIWindow>(renderer, 100, 500, 400, 200, "Window Title", bodyFont);
     mainWindow->AddUIElement(std::make_unique<UIButton>(105, 570, 50, 20, "Test", bodyFont, colorGrey));
-
-    UIButton button(0, screenSize.y - 50, screenSize.x, 50, "Test", pausedFont, { 100, 100, 100, 255 });
 
     while (isRunning)
     {
@@ -181,7 +182,6 @@ int main(int argv, char** args)
             }
 
             mainWindow->HandleEvent(event);
-            button.HandleEvent(event);
 
             if (event.type == SDL_MOUSEMOTION)
             {
@@ -206,6 +206,11 @@ int main(int argv, char** args)
                 if (event.key.keysym.sym == SDLK_SPACE)
                 {
                     isPaused = !isPaused;
+                }
+                
+                if (event.key.keysym.sym == SDLK_m)
+                {
+                    if (!mainWindow->GetIsDisplayed()) mainWindow->SetIsDisplayed(true);
                 }
             }
 
@@ -273,7 +278,6 @@ int main(int argv, char** args)
 
         // Draw UI on top of scene
         mainWindow->Draw(renderer);
-        button.Draw(renderer);
 
         // Draw cursor
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
