@@ -2,6 +2,7 @@
 
 #include "UIElement.h"
 #include "UILabel.h"
+#include "UIButton.h"
 #include <vector>
 #include <memory>
 #include <string>
@@ -14,8 +15,18 @@ public:
 
 	void Draw(SDL_Renderer* renderer) override;
 	void HandleEvent(const SDL_Event& event) override;
+	// Closes the window (stops displaying)
+	void Close();
 
 	void AddUIElement(std::unique_ptr<UIElement> element);
+
+	int GetPosX() const;
+	int GetPosY() const;
+	int GetWidth() const;
+	int GetHeight() const;
+	bool GetIsDisplayed() const;
+
+	void SetIsDisplayed(bool isDisplayed);
 
 private:
 	int posX;
@@ -23,8 +34,11 @@ private:
 	int width;
 	int height;
 
-	std::unique_ptr<UILabel> windowTitleLabel;
+	std::unique_ptr<UILabel> windowTitleLabel; // Does this need to be a unique pointer?
 	bool drawTitle = true;
+
+	std::unique_ptr<UIButton> windowCloseButton;
+	bool drawCloseButton = true;
 
 	bool isDisplayed = true;
 
