@@ -11,6 +11,7 @@
 - [x] Implement primitive UI classes (Window, Button, Label, etc.)
 - [ ] Have UIElement give default constructor, getters and setters?
 - [ ] Create UIManager to handle UI updating, rendering
+- [ ] Phase out Text class to be replaced by UILabel
 - [ ] ***BUG*** When UIWindow close button is used and the window is then redisplayed, the close button retains hover state (only visual)
 
 ## Core Components
