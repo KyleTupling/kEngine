@@ -9,6 +9,7 @@
 
 #### UI
 - [x] Implement primitive UI classes (Window, Button, Label, etc.)
+- [ ] Have UIElement give default constructor, getters and setters?
 - [ ] Create UIManager to handle UI updating, rendering
 
 ## Core Components
