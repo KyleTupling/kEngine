@@ -33,4 +33,19 @@ void UIButton::HandleEvent(const SDL_Event& event)
 
 		isHovered = mouseX >= rect.x && mouseX <= rect.x + rect.w && mouseY >= rect.y && mouseY <= rect.y + rect.h;
 	}
+	if (event.type == SDL_MOUSEBUTTONDOWN)
+	{
+		if (isHovered)
+		{
+			if (OnClick)
+			{
+				OnClick();
+			}
+		}
+	}
+}
+
+void UIButton::SetOnClick(std::function<void()> callback)
+{
+	OnClick = callback;
 }
