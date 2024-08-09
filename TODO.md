@@ -1,5 +1,7 @@
 # kEngine To-do List
 
+- [ ] Separate simulation to another thread (will prevent step jumps on window move)
+
 ## Graphics
 #### Renderer
 - [ ] Create RendererContext class/namepsace to manage rendering and prevent multiple other classes needing to store instance reference.
