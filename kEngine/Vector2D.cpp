@@ -1,17 +1,9 @@
 #include "Vector2D.h"
 #include <cmath>
 
-Vector2D::Vector2D()
-{
-    x = 0.0f;
-    y = 0.0f;
-}
+Vector2D::Vector2D() : x(0.0), y(0.0) {}
 
-Vector2D::Vector2D(double x, double y)
-{
-    this->x = x;
-    this->y = y;
-}
+Vector2D::Vector2D(double x, double y) : x(x), y(y) {}
 
 // Set x and y values of vector instance
 void Vector2D::Set(double newX, double newY)
@@ -21,23 +13,27 @@ void Vector2D::Set(double newX, double newY)
 }
 
 // Returns magnitude of vector instance
-double Vector2D::GetMagnitude()
+double Vector2D::GetMagnitude() const
 {
-    return sqrt(this->x * this->x + this->y * this->y);
+    return std::sqrt(this->x * this->x + this->y * this->y);
 }
 
 // Returns squared magnitude of vector instance
 // More efficient than GetMagnitude(), doesn't require sqrt
-double Vector2D::GetMagnitudeSqr()
+double Vector2D::GetMagnitudeSqr() const
 {
     return (this->x * this->x + this->y * this->y);
 }
 
 // Returns unit vector of vector instance
-Vector2D Vector2D::GetUnitVector()
+Vector2D Vector2D::GetUnitVector() const
 {
     double mag = GetMagnitude();
-    return Divide(mag);
+    if (mag != 0) // Prevent division by zero
+    {
+        return Divide(mag);
+    }
+    return Vector2D(); // Return zero vector if magnitude is zero
 }
 
 Vector2D Vector2D::Add(Vector2D vec1, Vector2D vec2)
@@ -95,9 +91,4 @@ Vector2D Vector2D::Divide(double scalar) const
 Vector2D Vector2D::operator/(double scalar) const
 {
     return this->Divide(scalar);
-}
-
-Vector2D operator/(double scalar, const Vector2D& vec)
-{
-    return vec.Divide(scalar);
 }

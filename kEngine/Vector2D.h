@@ -12,9 +12,9 @@ public:
 
     void Set(double newX, double newY);
 
-    double GetMagnitude();
-    double GetMagnitudeSqr();
-    Vector2D GetUnitVector();
+    double GetMagnitude() const;
+    double GetMagnitudeSqr() const;
+    Vector2D GetUnitVector() const;
 
     static Vector2D Add(Vector2D vec1, Vector2D vec2);
     static Vector2D Subtract(Vector2D vec1, Vector2D vec2);
@@ -34,6 +34,5 @@ public:
 
     // Division by scalar
     Vector2D Divide(double scalar) const;
-    Vector2D operator/(double scalar) const;
-    friend Vector2D operator/(double scalar, const Vector2D& vec);
+    Vector2D operator/(double scalar) const; // vec / scalar syntax
 };
