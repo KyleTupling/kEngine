@@ -152,7 +152,7 @@ int main(int argv, char** args)
     Text bodyText(renderer, "Planet", bodyFont, static_cast<int>(body1.position.x), static_cast<int>(body1.position.y + body1.radius) + 10);
     std::string bodyInfoStr = to_string(body1.velocity.x);
 
-    auto mainWindow = std::make_unique<UIWindow>(renderer, 100, 500, 400, 200, "Window Title", bodyFont);
+    auto mainWindow = std::make_unique<UIWindow>(renderer, 100, 500, 400, 200, "Planet", bodyFont);
     mainWindow->AddUIElement(std::make_unique<UIButton>(105, 570, 50, 20, "Test", bodyFont, colorGrey));
 
     while (isRunning)
