@@ -110,7 +110,7 @@ int main(int argv, char** args)
     Uint64 last = 0;
     double deltaTime = 0;
 
-    Body body1(Vector2D(75, 50), Vector2D(75, 0));
+    Body body1(Vector2D(200, 50), Vector2D(350, 0));
     body1.color.b = 255;
     body1.drawPrevious = true;
 
