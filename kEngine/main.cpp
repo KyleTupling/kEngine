@@ -135,7 +135,7 @@ int main(int argv, char** args)
 {
     // Initialise variables related to deltaTime
     Uint64 current = SDL_GetPerformanceCounter();
-    Uint64 last = 0;
+    Uint64 last = current;
     double deltaTime = 0;
 
     Body body1(Vector2D(200, 50), Vector2D(350, 0));
@@ -192,9 +192,9 @@ int main(int argv, char** args)
     while (isRunning)
     {
         // Calculate deltaTime each frame
-        last = current;
         current = SDL_GetPerformanceCounter();
         deltaTime = static_cast<double>((current - last) / (double)SDL_GetPerformanceFrequency());
+        last = current;
 
         // Calculate current FPS and display on window title
         double currentFPS = 1 / deltaTime;
