@@ -14,6 +14,7 @@
 - [ ] Have UIElement give default constructor, getters and setters?
 - [ ] Create UIManager to handle UI updating, rendering
 - [ ] Phase out Text class to be replaced by UILabel
+- [ ] Prevent click on UI event also calling on simulation layer
 - [ ] ***BUG*** When UIWindow close button is used and the window is then redisplayed, the close button retains hover state (only visual)
 
 ## Core Components
@@ -24,4 +25,4 @@
 - [x] Implement Camera system (allow for movement around scene and zoom - potential savings if culling used)
 - [x] Refactor zoom to use linear interpolation towards a target zoom
 - [x] Clamp target zoom and don't allow zoom input if request is beyond clamp
-- [ ] ***BUG*** When the zoom is close enough to the target zoom, the LERP stops and the zoom is set to exactly the target zoom. This is can cause a slight jitter into place.  
+- [ ] ***BUG*** When the zoom is close enough to the target zoom, the LERP stops and the zoom is set to exactly the target zoom. This is can cause a slight jitter into place. 
