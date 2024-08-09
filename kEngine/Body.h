@@ -23,15 +23,16 @@ public:
     bool drawPrevious = false; // Enables drawing of previous positions trail
     int minimumPrevDist = 150; // The minimum distance required between last stored position and current position to allow storing of current position
 
-    Uint8 colour[4] = { 0, 0, 0, 255 };
+    SDL_Color color = { 0, 0, 0, 255 };
+    SDL_Color hoveredColor = { 100, 100, 100, 255 };
 
     bool isHovered = false;
 
     Body();
-    Body(Vector2D pos, Vector2D vel);
+    Body(const Vector2D& pos, const Vector2D& vel);
 
     // Applies a force to a body instance based on Newton's 2nd law of motion
-    void ApplyForce(Vector2D force);
+    void ApplyForce(const Vector2D& force);
 
     // Attract body instance using Newton's Law of Gravitation
     void AttractBody(Body& body);

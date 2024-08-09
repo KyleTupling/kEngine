@@ -7,17 +7,17 @@ Body::Body()
 }
 
 //TODO: Refactor to take by reference
-Body::Body(Vector2D pos, Vector2D vel)
+Body::Body(const Vector2D& pos, const Vector2D& vel)
 {
 	this->position.Set(pos.x, pos.y);
 	this->velocity.Set(vel.x, vel.y);
 }
 
-void Body::ApplyForce(Vector2D force)
+void Body::ApplyForce(const Vector2D& force)
 {
 	// Acceleration = Force / Mass
-	Vector2D acc = force.Divide(this->mass);
-	this->acceleration = this->acceleration + acc;
+	Vector2D acc = force.Divide(mass);
+	acceleration = acceleration + acc;
 }
 
 void Body::AttractBody(Body& body)
@@ -70,8 +70,11 @@ void Body::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& sc
             SDL_RenderFillRect(renderer, &rect);
         }
     }
-    SDL_SetRenderDrawColor(renderer, this->colour[0], this->colour[1], this->colour[2], this->colour[3]);
-    //SDL_Rect bodyRect{ (int)this->position.x - this->radius, (int)this->position.y - this->radius, this->radius * 2, this->radius * 2 };
+
+    if (isHovered)
+        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    else
+        SDL_SetRenderDrawColor(renderer, hoveredColor.r, hoveredColor.g, hoveredColor.b, hoveredColor.a);
 
     SDL_Rect bodyRect = {
         static_cast<int>(screenPos.x - radius * camera.zoom),
