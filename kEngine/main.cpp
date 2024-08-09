@@ -185,7 +185,12 @@ int main(int argv, char** args)
     std::string bodyInfoStr = to_string(body1.velocity.x);
 
     auto mainWindow = std::make_unique<UIWindow>(renderer, 100, 500, 400, 200, "Planet", bodyFont.get());
-    mainWindow->AddUIElement(std::make_unique<UIButton>(105, 570, 50, 20, "Test", bodyFont.get(), colorGrey));
+    auto windowButton = std::make_unique<UIButton>(105, 570, 50, 20, "Test", bodyFont.get(), colorGrey);
+    windowButton->SetOnClick([&body1]()
+        {
+            body1.color.r = 100;
+        });
+    mainWindow->AddUIElement(std::move(windowButton));
 
     while (isRunning)
     {
@@ -210,6 +215,7 @@ int main(int argv, char** args)
                 break;
             }
 
+            // Pause simulation if window is dragged (prevents step jumps)
             if (event.window.event == SDL_WINDOWEVENT_MOVED)
             {
                 isPaused = true;
