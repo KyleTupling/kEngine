@@ -18,6 +18,7 @@ public:
 	// Closes the window (stops displaying)
 	void Close();
 
+	// Add child UIElement
 	void AddUIElement(std::unique_ptr<UIElement> element);
 
 	int GetPosX() const;
