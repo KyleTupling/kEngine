@@ -32,10 +32,16 @@ public:
     Body(const Vector2D& pos, const Vector2D& vel);
 
     // Applies a force to a body instance based on Newton's 2nd law of motion
-    void ApplyForce(const Vector2D& force);
+    inline void ApplyForce(const Vector2D& force);
 
     // Attract body instance using Newton's Law of Gravitation
     void AttractBody(Body& body);
+
+    // Updates the previous positions of the body.
+    void UpdatePreviousPositions();
+
+    // Updates kinematics of body (position, velocity, acceleration)
+    void UpdateKinematics(double deltaTime);
 
     // Updates logic and physics of body instance
     // Takes parameter [double]deltaTime for equations of motion
@@ -43,7 +49,7 @@ public:
 
     // Draws the body instance to a window using the window's assigned renderer
     // Takes parameter [SDL_Renderer*]renderer
-    void Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize);
+    void Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize) const;
 
     // Checks whether given mouse coordinates are inside body
     void CheckHover(const Vector2D& mousePos, const Camera& camera, const Vector2D& screenSize);
