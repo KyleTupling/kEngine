@@ -14,7 +14,7 @@
 
 Vector2D screenSize(1280, 720);
 
-bool isRunning = true; // Keep track of engine state
+bool isRunning = true; // Keep track of engine running state (main loop)
 bool isPaused = true;
 
 Vector2D cursorPos(0, 0);
@@ -25,14 +25,7 @@ SDL_Color colorWhite = { 255, 255, 255, 255 };
 SDL_Color colorBlack = { 0, 0, 0, 255 };
 SDL_Color colorGrey = { 100, 100, 100, 255 };
 
-// Convert [double] parameter x to [string]
-//std::string to_string(double x)
-//{
-//    std::ostringstream ss;
-//    ss << x;
-//    return ss.str();
-//}
-
+// Converts given variable to a std::string
 template <typename T>
 std::string to_string(T x)
 {
@@ -118,14 +111,14 @@ int main(int argv, char** args)
     double deltaTime = 0;
 
     Body body1(Vector2D(75, 50), Vector2D(75, 0));
-    body1.colour[2] = 255;
+    body1.color.b = 255;
     body1.drawPrevious = true;
 
     Body body2(Vector2D(500, 300), Vector2D(0, 0));
     body2.radius = 15;
-    body2.colour[0] = 230;
-    body2.colour[1] = 180;
-    body2.colour[2] = 30;
+    body2.color.r = 230;
+    body2.color.g = 180;
+    body2.color.b = 30;
     body2.mass = 1e18;
 
     // Initialise SDL
@@ -262,13 +255,7 @@ int main(int argv, char** args)
         body2.Draw(renderer, camera, screenSize);
         body1.Draw(renderer, camera, screenSize);
 
-        if (body1.isHovered)
-        {
-            body1.colour[1] = 100;
-        }
-        else {
-            body1.colour[1] = 0;
-        }
+        bodyText.Draw(camera, screenSize);
 
         // Draw UI on top of scene
         mainWindow->Draw(renderer);
@@ -277,13 +264,13 @@ int main(int argv, char** args)
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         DrawCircle(renderer, cursorPos.x, cursorPos.y, 5);
 
-        bodyText.Draw(camera, screenSize);
         SDL_RenderPresent(renderer);
     }
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 
+    // Close SDL_ttf fonts
     TTF_CloseFont(pausedFont);
     TTF_CloseFont(bodyFont);
     TTF_Quit();
