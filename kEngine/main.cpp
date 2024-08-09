@@ -125,9 +125,7 @@ void UpdateCamera(Camera& camera, const Vector2D& screenSize)
     // Reset position and zoom
     if (keyboardState[SDL_SCANCODE_X])
     {
-        camera.position.Set(screenSize.x / 2, screenSize.y / 2);
-        camera.zoom = 1.0f;
-        camera.targetZoom = 1.0f;
+        camera.Reset(screenSize);
     }
 }
 
@@ -210,6 +208,11 @@ int main(int argv, char** args)
             {
                 isRunning = false;
                 break;
+            }
+
+            if (event.window.event == SDL_WINDOWEVENT_MOVED)
+            {
+                isPaused = true;
             }
 
             mainWindow->HandleEvent(event);
