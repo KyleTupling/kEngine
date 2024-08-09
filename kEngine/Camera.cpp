@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include "MathFunctions.h"
 
-Camera::Camera(Vector2D pos, float z) : position(pos), zoom(z) {}
+Camera::Camera(Vector2D pos, float z) : defaultPosition(pos), position(pos), defaultZoom(z), zoom(z), targetZoom(z) {}
 
 Vector2D Camera::ConvertWorldToScreen(const Vector2D& worldPos, const Vector2D& screenSize) const
 {
@@ -25,6 +25,13 @@ void Camera::Zoom(const Vector2D& screenPos, const Vector2D& screenSize, bool is
 	zoom *= isZoomIn ? zoomSpeed : 1.0f / zoomSpeed;
 	Vector2D finalWorldPos = ConvertScreenToWorld(screenPos, screenSize);
 	position = position + (initialWorldPos - finalWorldPos);
+}
+
+void Camera::Reset(const Vector2D& screenSize)
+{
+	position = defaultPosition;
+	zoom = defaultZoom;
+	targetZoom = defaultZoom;
 }
 
 void Camera::Update(double deltaTime)
