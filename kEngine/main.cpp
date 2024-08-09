@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iostream>
 #include <cmath>
+#include <memory>
 
 #include "Vector2D.h"
 #include "Body.h"
@@ -40,6 +41,16 @@ bool InitializeSDL()
     }
     SDL_ShowCursor(SDL_DISABLE);
     return true;
+}
+
+std::unique_ptr<TTF_Font, decltype(&TTF_CloseFont)> LoadFont(const std::string& path, int size)
+{
+    TTF_Font* font = TTF_OpenFont(path.c_str(), size);
+    if (!font)
+    {
+        std::cerr << "TTF_OpenFont Error: " << TTF_GetError() << std::endl;
+    }
+    return std::unique_ptr<TTF_Font, decltype(&TTF_CloseFont)>(font, TTF_CloseFont);
 }
 
 // Converts given variable to a std::string
@@ -151,20 +162,32 @@ int main(int argv, char** args)
     Camera camera(Vector2D(screenSize.x / 2, screenSize.y / 2), 1.0f);
 
     // Initialise fonts
-    TTF_Font* pausedFont = TTF_OpenFont("C:/Users/PC/Desktop/cpp/ARIAL.TTF", 20);
-    TTF_Font* bodyFont = TTF_OpenFont("C:/Users/PC/Desktop/cpp/ARIAL.TTF", 18);
+    //TTF_Font* pausedFont = TTF_OpenFont("C:/Users/PC/Desktop/cpp/ARIAL.TTF", 20);
+    //TTF_Font* bodyFont = TTF_OpenFont("C:/Users/PC/Desktop/cpp/ARIAL.TTF", 18);
+
+    // Load fonts and handle loading errors
+    auto pausedFont = LoadFont("C:/Users/PC/Desktop/cpp/ARIAL.TTF", 20);
+    if (!pausedFont)
+    {
+        return 1;
+    }
+    auto bodyFont = LoadFont("C:/Users/PC/Desktop/cpp/ARIAL.TTF", 18);
+    if (!bodyFont)
+    {
+        return 1;
+    }
 
     // Initialise Text
     // Soon to be phased out and replaced by UILabel
-    Text pausedText(renderer, "PAUSED", pausedFont, 1280 - 100, 50, { 255, 255, 255, 255 });
+    Text pausedText(renderer, "PAUSED", pausedFont.get(), 1280 - 100, 50, {255, 255, 255, 255});
     pausedText.setIsFixed(true);
     SDL_Rect pausedRect{ pausedText.getPosX() - 50, pausedText.getPosY() - 20, 100, 40};
 
-    Text bodyText(renderer, "Planet", bodyFont, static_cast<int>(body1.position.x), static_cast<int>(body1.position.y + body1.radius) + 10);
+    Text bodyText(renderer, "Planet", bodyFont.get(), static_cast<int>(body1.position.x), static_cast<int>(body1.position.y + body1.radius) + 10);
     std::string bodyInfoStr = to_string(body1.velocity.x);
 
-    auto mainWindow = std::make_unique<UIWindow>(renderer, 100, 500, 400, 200, "Planet", bodyFont);
-    mainWindow->AddUIElement(std::make_unique<UIButton>(105, 570, 50, 20, "Test", bodyFont, colorGrey));
+    auto mainWindow = std::make_unique<UIWindow>(renderer, 100, 500, 400, 200, "Planet", bodyFont.get());
+    mainWindow->AddUIElement(std::make_unique<UIButton>(105, 570, 50, 20, "Test", bodyFont.get(), colorGrey));
 
     while (isRunning)
     {
@@ -289,8 +312,8 @@ int main(int argv, char** args)
     SDL_DestroyWindow(window);
 
     // Close SDL_ttf fonts
-    TTF_CloseFont(pausedFont);
-    TTF_CloseFont(bodyFont);
+    TTF_CloseFont(pausedFont.get());
+    TTF_CloseFont(bodyFont.get());
     TTF_Quit();
 
     SDL_Quit();
