@@ -72,9 +72,9 @@ void Body::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& sc
     }
 
     if (isHovered)
-        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-    else
         SDL_SetRenderDrawColor(renderer, hoveredColor.r, hoveredColor.g, hoveredColor.b, hoveredColor.a);
+    else
+        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 
     SDL_Rect bodyRect = {
         static_cast<int>(screenPos.x - radius * camera.zoom),
