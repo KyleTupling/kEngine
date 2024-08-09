@@ -36,9 +36,8 @@ double Vector2D::GetMagnitudeSqr()
 // Returns unit vector of vector instance
 Vector2D Vector2D::GetUnitVector()
 {
-    double mag = sqrt(this->x * this->x + this->y * this->y);
-    Vector2D unitVec = this->Divide(1000);
-    return unitVec;
+    double mag = GetMagnitude();
+    return Divide(mag);
 }
 
 Vector2D Vector2D::Add(Vector2D vec1, Vector2D vec2)
