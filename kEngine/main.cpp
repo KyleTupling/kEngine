@@ -321,10 +321,21 @@ int main(int argv, char** args)
     SDL_DestroyWindow(window);
 
     // Close SDL_ttf fonts
-    TTF_CloseFont(pausedFont.get());
-    TTF_CloseFont(bodyFont.get());
+    // No longer need to close fonts manually if using unqiue_ptrs
+    /*TTF_CloseFont(pausedFont.get());
+    TTF_CloseFont(bodyFont.get());*/
+
+    // TEMPORARY
+    // Ensure unique_ptrs to UIELements dependent on unique_ptrs to fonts close first
+    mainWindow.reset();
+    windowButton.reset();
+
+    pausedFont.reset();
+    bodyFont.reset();
+
     TTF_Quit();
 
     SDL_Quit();
+
     return 0;
 }
