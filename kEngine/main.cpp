@@ -160,12 +160,20 @@ int main(int argv, char** args)
 
     auto mainWindow = std::make_unique<UIWindow>(renderer, 100, 500, 400, 200, "Planet", bodyFont);
     mainWindow->SetIsFixedToScreen(false);
-    auto windowButton = std::make_unique<UIButton>(renderer, 105, 570, 50, 20, "Test", bodyFont, colorGrey);
+    auto windowButton = std::make_unique<UIButton>(renderer, 100, 700-40, 400, 40, "Test", bodyFont, colorGrey);
     windowButton->SetOnClick([&body1]()
         {
             body1.color.r = 100;
         });
     mainWindow->AddUIElement(std::move(windowButton));
+    auto windowLabel = std::make_unique<UILabel>(renderer, 180, 550, "(" + to_string(std::round(body1.position.x)) + ", " + to_string(std::round(body1.position.y)) + ")", bodyFont, colorWhite);
+    // Temporary: Store raw pointer to label to access within lambda function
+    auto* labelPtr = windowLabel.get();
+    windowLabel->SetTextUpdater([labelPtr, &body1]()
+        {
+            labelPtr->SetText("Position: (" + to_string(std::round(body1.position.x)) + ", " + to_string(std::round(body1.position.y)) + ")");
+        });
+    mainWindow->AddUIElement(std::move(windowLabel));
 
     while (isRunning)
     {
