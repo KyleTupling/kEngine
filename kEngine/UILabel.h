@@ -5,6 +5,7 @@
 #include <SDL_ttf.h>
 #include <string>
 #include <memory>
+#include <functional>
 
 class UILabel : public UIElement
 {
@@ -24,6 +25,7 @@ public:
 	void SetPosition(int x, int y);
 	void SetText(const std::string& text);
 	void SetDrawBackground(bool drawBG);
+	void SetTextUpdater(std::function<void()> callback);
 
 private:
 	std::string text;
@@ -35,5 +37,7 @@ private:
 	SDL_Renderer* renderer;
 	SDL_Texture* texture;
 	SDL_Rect rect;
+
+	std::function<void()> TextUpdater;
 };
 

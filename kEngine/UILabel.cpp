@@ -17,6 +17,11 @@ UILabel::~UILabel()
 
 void UILabel::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize)
 {
+	if (TextUpdater)
+	{
+		TextUpdater();
+	}
+
 	if (texture)
 	{
 		if (m_isFixedToScreen)
@@ -103,4 +108,9 @@ void UILabel::SetText(const std::string& text)
 void UILabel::SetDrawBackground(bool drawBG)
 {
 	drawBackground = drawBG;
+}
+
+void UILabel::SetTextUpdater(std::function<void()> callback)
+{
+	TextUpdater = callback;
 }
