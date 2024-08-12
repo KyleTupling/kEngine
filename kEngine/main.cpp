@@ -19,7 +19,6 @@ bool isRunning = true; // Keep track of engine running state (main loop)
 bool isPaused = true;
 
 Vector2D cursorPos(0, 0);
-
 bool isMouseDown = false;
 
 SDL_Color colorWhite = { 255, 255, 255, 255 };
@@ -160,7 +159,8 @@ int main(int argv, char** args)
     bodyLabel->SetIsFixedToScreen(false);
 
     auto mainWindow = std::make_unique<UIWindow>(renderer, 100, 500, 400, 200, "Planet", bodyFont);
-    auto windowButton = std::make_unique<UIButton>(105, 570, 50, 20, "Test", bodyFont, colorGrey);
+    mainWindow->SetIsFixedToScreen(false);
+    auto windowButton = std::make_unique<UIButton>(renderer, 105, 570, 50, 20, "Test", bodyFont, colorGrey);
     windowButton->SetOnClick([&body1]()
         {
             body1.color.r = 100;
