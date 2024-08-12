@@ -10,7 +10,7 @@ UIWindow::UIWindow(SDL_Renderer* renderer, int posX, int posY, int width, int he
 	windowTitleLabel = std::make_unique<UILabel>(renderer, posX + width / 2, posY + 5, title, font, colorWhite, colorBlack);
 	
 	// Create close button
-	windowCloseButton = std::make_unique<UIButton>(posX + width - 30, posY, 30, 30, "X", font, colorBlack);
+	windowCloseButton = std::make_unique<UIButton>(renderer, posX + width - 30, posY, 30, 30, "X", font, colorBlack);
 	windowCloseButton->SetOnClick([this]() 
 		{
 			this->Close(); 
@@ -24,18 +24,44 @@ UIWindow::~UIWindow()
 
 void UIWindow::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize)
 {
+	// Temporary: Ensure explicit child elements maintain drawing rule
+	windowTitleLabel->SetIsFixedToScreen(m_isFixedToScreen);
+	windowCloseButton->SetIsFixedToScreen(m_isFixedToScreen);
+
 	if (isDisplayed)
 	{
-		SDL_Rect rect = { posX, posY, width, height };
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-		SDL_RenderFillRect(renderer, &rect);
-
-		if (drawTitle) // Draw window titlebar
+		if (m_isFixedToScreen)
 		{
-			rect = { posX, posY, width, 30 };
-			SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
+			SDL_Rect rect = { posX, posY, width, height };
+			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 			SDL_RenderFillRect(renderer, &rect);
-			windowTitleLabel->Draw(renderer, camera, screenSize);
+
+			if (drawTitle) // Draw window titlebar
+			{
+				rect = { posX, posY, width, 30 };
+				SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
+				SDL_RenderFillRect(renderer, &rect);
+				windowTitleLabel->Draw(renderer, camera, screenSize);
+			}
+		}
+		else
+		{
+			Vector2D screenPos = camera.ConvertWorldToScreen(Vector2D(posX, posY), screenSize);
+			SDL_Rect rect = { screenPos.x, screenPos.y, width * camera.zoom, height * camera.zoom };
+			SDL_RenderFillRect(renderer, &rect);
+
+			if (drawTitle) // Draw window titlebar
+			{
+				rect = { 
+					static_cast<int>(screenPos.x), 
+					static_cast<int>(screenPos.y), 
+					static_cast<int>(width * camera.zoom),
+					static_cast < int>(30 * camera.zoom)
+				};
+				SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
+				SDL_RenderFillRect(renderer, &rect);
+				windowTitleLabel->Draw(renderer, camera, screenSize);
+			}
 		}
 
 		if (drawCloseButton)
@@ -71,6 +97,7 @@ void UIWindow::Close()
 
 void UIWindow::AddUIElement(std::unique_ptr<UIElement> element)
 {
+	element->SetIsFixedToScreen(m_isFixedToScreen);
 	childrenElements.push_back(std::move(element));
 }
 

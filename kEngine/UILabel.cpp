@@ -35,7 +35,7 @@ void UILabel::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D&
 		{
 			Vector2D screenPos = camera.ConvertWorldToScreen(Vector2D(rect.x, rect.y), screenSize);
 			SDL_SetRenderDrawColor(renderer, textColor.r, textColor.g, textColor.b, textColor.a);
-			SDL_Rect drawRect = { screenPos.x -  rect.w / 2, screenPos.y + rect.h / 2 - 10, rect.w, rect.h };
+			SDL_Rect drawRect = { screenPos.x -  (rect.w / 2) * camera.zoom, screenPos.y + (rect.h / 2 - 10) * camera.zoom, rect.w * camera.zoom, rect.h * camera.zoom };
 			SDL_RenderCopy(renderer, texture, nullptr, &drawRect);
 		}
 	}
