@@ -5,12 +5,13 @@
 #include <SDL_ttf.h>
 #include <string>
 #include <functional>
+#include <memory>
 
 class UIButton : public UIElement
 {
 public:
 	UIButton(int x, int y, int w, int h, const std::string& text, TTF_Font* font, SDL_Color color);
-	void Draw(SDL_Renderer* renderer) override;
+	void Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize) override;
 	void HandleEvent(const SDL_Event& event) override;
 	// Set the function that runs if the button is clicked
 	void SetOnClick(std::function<void()> callback);

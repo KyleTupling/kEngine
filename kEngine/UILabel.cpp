@@ -15,12 +15,29 @@ UILabel::~UILabel()
 	}
 }
 
-void UILabel::Draw(SDL_Renderer* renderer)
+void UILabel::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize)
 {
 	if (texture)
 	{
-		SDL_Rect drawRect = { rect.x - rect.w / 2, rect.y + rect.h / 2 - 10, rect.w, rect.h };
-		SDL_RenderCopy(renderer, texture, nullptr, &drawRect);
+		if (m_isFixedToScreen)
+		{
+			if (drawBackground)
+			{
+				SDL_SetRenderDrawColor(renderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+				SDL_Rect backgroundRect = { rect.x - rect.w / 2 - 10, rect.y + rect.h / 2 - 10 - 10, rect.w + 20, rect.h + 20 };
+				SDL_RenderFillRect(renderer, &backgroundRect);
+			}
+			SDL_SetRenderDrawColor(renderer, textColor.r, textColor.g, textColor.b, textColor.a);
+			SDL_Rect drawRect = { rect.x - rect.w / 2, rect.y + rect.h / 2 - 10, rect.w, rect.h };
+			SDL_RenderCopy(renderer, texture, nullptr, &drawRect);
+		}
+		else
+		{
+			Vector2D screenPos = camera.ConvertWorldToScreen(Vector2D(rect.x, rect.y), screenSize);
+			SDL_SetRenderDrawColor(renderer, textColor.r, textColor.g, textColor.b, textColor.a);
+			SDL_Rect drawRect = { screenPos.x -  rect.w / 2, screenPos.y + rect.h / 2 - 10, rect.w, rect.h };
+			SDL_RenderCopy(renderer, texture, nullptr, &drawRect);
+		}
 	}
 }
 
@@ -66,6 +83,11 @@ int UILabel::GetHeight() const
 	return rect.h;
 }
 
+bool UILabel::GetDrawBackground() const
+{
+	return drawBackground;
+}
+
 void UILabel::SetPosition(int x, int y)
 {
 	rect.x = x;
@@ -76,4 +98,9 @@ void UILabel::SetText(const std::string& text)
 {
 	this->text = text;
 	UpdateTexture();
+}
+
+void UILabel::SetDrawBackground(bool drawBG)
+{
+	drawBackground = drawBG;
 }

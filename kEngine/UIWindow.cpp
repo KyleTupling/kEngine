@@ -22,7 +22,7 @@ UIWindow::~UIWindow()
 	// Smart pointers used (handle memory deallocation automatically)
 }
 
-void UIWindow::Draw(SDL_Renderer* renderer)
+void UIWindow::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize)
 {
 	if (isDisplayed)
 	{
@@ -35,17 +35,17 @@ void UIWindow::Draw(SDL_Renderer* renderer)
 			rect = { posX, posY, width, 30 };
 			SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
 			SDL_RenderFillRect(renderer, &rect);
-			windowTitleLabel->Draw(renderer);
+			windowTitleLabel->Draw(renderer, camera, screenSize);
 		}
 
 		if (drawCloseButton)
 		{
-			windowCloseButton->Draw(renderer);
+			windowCloseButton->Draw(renderer, camera, screenSize);
 		}
 
 		for (const auto& element : childrenElements)
 		{
-			element->Draw(renderer);
+			element->Draw(renderer, camera, screenSize);
 		}
 	}
 }

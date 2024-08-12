@@ -13,7 +13,7 @@ public:
 	UIWindow(SDL_Renderer* renderer, int posX, int posY, int width, int height, const std::string& title, TTF_Font* font);
 	~UIWindow();
 
-	void Draw(SDL_Renderer* renderer) override;
+	void Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize) override;
 	void HandleEvent(const SDL_Event& event) override;
 	// Closes the window (stops displaying)
 	void Close();
