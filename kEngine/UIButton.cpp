@@ -1,10 +1,17 @@
 #include "UIButton.h"
 
-UIButton::UIButton(int x, int y, int w, int h, const std::string& text, TTF_Font* font, SDL_Color color)
-	: rect{ x, y, w, h }, text(text), font(font), color(color) {}
+extern SDL_Color colorWhite;
+
+UIButton::UIButton(SDL_Renderer* renderer, int x, int y, int w, int h, const std::string& text, TTF_Font* font, SDL_Color color)
+	: rect{ x, y, w, h }, font(font), color(color)
+{
+	label = std::make_unique<UILabel>(renderer, x + w / 2, y + h / 2 - 10, text, font, colorWhite);
+}
 
 void UIButton::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize)
 {
+	label->SetIsFixedToScreen(m_isFixedToScreen);
+
 	if (isHovered)
 	{
 		SDL_SetRenderDrawColor(renderer, hoveredColor.r, hoveredColor.g, hoveredColor.b, hoveredColor.a);
@@ -14,14 +21,24 @@ void UIButton::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D
 		SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 	}
 	
-	SDL_RenderFillRect(renderer, &rect);
-
-	SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), {255, 255, 255, 255});
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_Rect textRect = { rect.x + rect.w / 2 - surface->w / 2, rect.y + rect.h / 2 - surface->h / 2, surface->w, surface->h };
-	SDL_RenderCopy(renderer, texture, NULL, &textRect);
-	SDL_FreeSurface(surface);
-	SDL_DestroyTexture(texture);
+	// TODO: Refactor to avoid creating and destroying surface and texture every frame
+	if (m_isFixedToScreen)
+	{
+		SDL_RenderFillRect(renderer, &rect);
+	}
+	else
+	{
+		Vector2D screenPos = camera.ConvertWorldToScreen(Vector2D(rect.x, rect.y), screenSize);
+		SDL_Rect drawRect = { 
+			screenPos.x, 
+			screenPos.y,
+			rect.w * camera.zoom, 
+			rect.h * camera.zoom 
+		};
+		SDL_RenderFillRect(renderer, &drawRect);
+	}
+	
+	label->Draw(renderer, camera, screenSize);
 }
 
 void UIButton::HandleEvent(const SDL_Event& event)
