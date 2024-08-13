@@ -18,7 +18,12 @@ public:
 	// Closes the window (stops displaying)
 	void Close();
 
-	// Add child UIElement
+	/**
+	 * @brief Adds a child UIElement to the UIWindow.
+	 * These elements will be rendered automatically with the UIWindow.
+	 *
+	 * @param element Unique pointer to the UIElement
+	 */
 	void AddUIElement(std::unique_ptr<UIElement> element);
 
 	int GetPosX() const;
@@ -27,6 +32,10 @@ public:
 	int GetHeight() const;
 	bool GetIsDisplayed() const;
 
+	void SetPosX(int x);
+	void SetPosY(int y);
+	void SetWidth(int w);
+	void SetHeight(int h);
 	void SetIsDisplayed(bool isDisplayed);
 
 private:

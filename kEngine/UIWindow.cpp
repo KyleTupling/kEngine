@@ -131,6 +131,26 @@ bool UIWindow::GetIsDisplayed() const
 
 // Setters
 
+void UIWindow::SetPosX(int x)
+{
+	posX = x;
+}
+
+void UIWindow::SetPosY(int y)
+{
+	posY = y;
+}
+
+void UIWindow::SetWidth(int w)
+{
+	width = w;
+}
+
+void UIWindow::SetHeight(int h)
+{
+	height = h;
+}
+
 void UIWindow::SetIsDisplayed(bool isDisplayed)
 {
 	this->isDisplayed = isDisplayed;
