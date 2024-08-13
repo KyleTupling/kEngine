@@ -158,9 +158,9 @@ int main(int argv, char** args)
     auto bodyLabel = std::make_unique<UILabel>(renderer, static_cast<int>(body1.position.x), static_cast<int>(body1.position.y + body1.radius) + 10, "Planet", bodyFont, colorBlack, colorWhite);
     bodyLabel->SetIsFixedToScreen(false);
 
-    auto mainWindow = std::make_unique<UIWindow>(renderer, 100, 500, 400, 200, "Planet", bodyFont);
+    auto mainWindow = std::make_unique<UIWindow>(renderer, body1.position.x + 50, body1.position.y - 20, 400, 200, "Planet", bodyFont);
     mainWindow->SetIsFixedToScreen(false);
-    auto windowButton = std::make_unique<UIButton>(renderer, 100, 700-40, 400, 40, "Test", bodyFont, colorGrey);
+    auto windowButton = std::make_unique<UIButton>(renderer, mainWindow->GetPosX(), mainWindow->GetPosY() + mainWindow->GetHeight() - 40, mainWindow->GetWidth(), 40, "Test", bodyFont, colorGrey);
     windowButton->SetOnClick([&body1]()
         {
             body1.color.r = 100;
@@ -210,7 +210,7 @@ int main(int argv, char** args)
             {
                 // Store current mouse position on mouse move
                 cursorPos.Set(event.motion.x, event.motion.y);
-
+                mainWindow->CheckHover(cursorPos, camera, screenSize);
                 body1.CheckHover(cursorPos, camera, screenSize);
             }
 
@@ -234,6 +234,11 @@ int main(int argv, char** args)
                 if (event.key.keysym.sym == SDLK_m)
                 {
                     if (!mainWindow->GetIsDisplayed()) mainWindow->SetIsDisplayed(true);
+                }
+
+                if (event.key.keysym.sym == SDLK_n)
+                {
+                    mainWindow->SetIsFixedToScreen(!mainWindow->GetIsFixedToScreen());
                 }
             }
 
@@ -267,6 +272,10 @@ int main(int argv, char** args)
             // Keep bodyLabel under body render
             bodyLabel->SetPosition(static_cast<int>(body1.position.x), static_cast<int>(body1.position.y + body1.radius) + 10);
 
+            // Testing sticking window to body
+            mainWindow->SetPosX(body1.position.x + 50);
+            mainWindow->SetPosY(body1.position.y - 20);
+
             if (isMouseDown) // If mouse is clicked, apply force to body1 directly proportional to distance between the body and the mouse
             {
                 double cursorDist = (cursorPos - body1.position).GetMagnitude();
@@ -278,7 +287,6 @@ int main(int argv, char** args)
 
         if (isPaused)
         {
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0.1);
             pausedLabel->Draw(renderer, camera, screenSize);
         }
 
