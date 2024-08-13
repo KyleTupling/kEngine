@@ -8,7 +8,7 @@ UILabel::UILabel(SDL_Renderer* renderer, int x, int y, const std::string& text, 
 
 UILabel::~UILabel()
 {
-	// Clean textures
+	// Clean texture
 	if (texture)
 	{
 		SDL_DestroyTexture(texture);
@@ -63,9 +63,24 @@ void UILabel::UpdateTexture()
     SDL_FreeSurface(surface);
 
 	int w, h;
-	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h); // Get width and height of texture
 	rect.w = w;
 	rect.h = h;
+}
+
+const std::string& UILabel::GetText() const
+{
+	return text;
+}
+
+const SDL_Color& UILabel::GetTextColor() const
+{
+	return textColor;
+}
+
+const SDL_Color& UILabel::GetBackgroundColor() const
+{
+	return backgroundColor;
 }
 
 int UILabel::GetPosX() const
@@ -103,6 +118,16 @@ void UILabel::SetText(const std::string& text)
 {
 	this->text = text;
 	UpdateTexture();
+}
+
+void UILabel::SetTextColor(const SDL_Color& color)
+{
+	textColor = color;
+}
+
+void UILabel::SetBackgroundColor(const SDL_Color& color)
+{
+	backgroundColor = color;
 }
 
 void UILabel::SetDrawBackground(bool drawBG)
