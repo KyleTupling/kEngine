@@ -21,7 +21,6 @@ void UIButton::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D
 		SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 	}
 	
-	// TODO: Refactor to avoid creating and destroying surface and texture every frame
 	if (m_isFixedToScreen)
 	{
 		SDL_RenderFillRect(renderer, &rect);
