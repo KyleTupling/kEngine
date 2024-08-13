@@ -16,6 +16,6 @@ public:
 	void SetIsFixedToScreen(bool isFixed) { m_isFixedToScreen = isFixed; }
 
 protected:
-	bool m_isFixedToScreen = true;
+	bool m_isFixedToScreen = true; // Whether UIElement position is fixed on screen
 };
 
