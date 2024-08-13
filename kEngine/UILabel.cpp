@@ -3,6 +3,8 @@
 UILabel::UILabel(SDL_Renderer* renderer, int x, int y, const std::string& text, TTF_Font* font, SDL_Color textColor, SDL_Color backgroundColor)
 	: text(text), font(font), textColor(textColor), backgroundColor(backgroundColor), renderer(renderer), rect{ x, y, 0, 0 }
 {
+	m_posX = x;
+	m_posY = y;
 	UpdateTexture();
 }
 
@@ -29,18 +31,18 @@ void UILabel::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D&
 			if (drawBackground)
 			{
 				SDL_SetRenderDrawColor(renderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
-				SDL_Rect backgroundRect = { rect.x - rect.w / 2 - 10, rect.y + rect.h / 2 - 10 - 10, rect.w + 20, rect.h + 20 };
+				SDL_Rect backgroundRect = { m_posX - width / 2 - 10, m_posY + height / 2 - 10 - 10, width + 20, height + 20 };
 				SDL_RenderFillRect(renderer, &backgroundRect);
 			}
 			SDL_SetRenderDrawColor(renderer, textColor.r, textColor.g, textColor.b, textColor.a);
-			SDL_Rect drawRect = { rect.x - rect.w / 2, rect.y + rect.h / 2 - 10, rect.w, rect.h };
+			SDL_Rect drawRect = { m_posX - width / 2, m_posY + height / 2 - 10, width, height };
 			SDL_RenderCopy(renderer, texture, nullptr, &drawRect);
 		}
 		else
 		{
-			Vector2D screenPos = camera.ConvertWorldToScreen(Vector2D(rect.x, rect.y), screenSize);
+			Vector2D screenPos = camera.ConvertWorldToScreen(Vector2D(m_posX, m_posY), screenSize);
 			SDL_SetRenderDrawColor(renderer, textColor.r, textColor.g, textColor.b, textColor.a);
-			SDL_Rect drawRect = { screenPos.x -  (rect.w / 2) * camera.zoom, screenPos.y + (rect.h / 2 - 10) * camera.zoom, rect.w * camera.zoom, rect.h * camera.zoom };
+			SDL_Rect drawRect = { screenPos.x -  (width / 2) * camera.zoom, screenPos.y + (height / 2 - 10) * camera.zoom, width * camera.zoom, height * camera.zoom };
 			SDL_RenderCopy(renderer, texture, nullptr, &drawRect);
 		}
 	}
@@ -66,6 +68,8 @@ void UILabel::UpdateTexture()
 	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h); // Get width and height of texture
 	rect.w = w;
 	rect.h = h;
+	width = w;
+	height = h;
 }
 
 const std::string& UILabel::GetText() const
@@ -81,16 +85,6 @@ const SDL_Color& UILabel::GetTextColor() const
 const SDL_Color& UILabel::GetBackgroundColor() const
 {
 	return backgroundColor;
-}
-
-int UILabel::GetPosX() const
-{
-	return rect.x;
-}
-
-int UILabel::GetPosY() const
-{
-	return rect.y;
 }
 
 int UILabel::GetWidth() const
@@ -110,8 +104,8 @@ bool UILabel::GetDrawBackground() const
 
 void UILabel::SetPosition(int x, int y)
 {
-	rect.x = x;
-	rect.y = y;
+	UIElement::SetPosX(x);
+	UIElement::SetPosY(y);
 }
 
 void UILabel::SetText(const std::string& text)

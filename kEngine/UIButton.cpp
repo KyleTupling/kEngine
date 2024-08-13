@@ -3,8 +3,13 @@
 extern SDL_Color colorWhite;
 
 UIButton::UIButton(SDL_Renderer* renderer, int x, int y, int w, int h, const std::string& text, TTF_Font* font, SDL_Color color)
-	: rect{ x, y, w, h }, font(font), color(color)
+	: font(font), color(color)
 {
+	m_posX = x;
+	m_posY = y;
+	width = w;
+	height = h;
+
 	label = std::make_unique<UILabel>(renderer, x + w / 2, y + h / 2 - 10, text, font, colorWhite);
 }
 
@@ -23,16 +28,17 @@ void UIButton::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D
 	
 	if (m_isFixedToScreen)
 	{
+		SDL_Rect rect{ m_posX, m_posY, width, height };
 		SDL_RenderFillRect(renderer, &rect);
 	}
 	else
 	{
-		Vector2D screenPos = camera.ConvertWorldToScreen(Vector2D(rect.x, rect.y), screenSize);
+		Vector2D screenPos = camera.ConvertWorldToScreen(Vector2D(m_posX, m_posY), screenSize);
 		SDL_Rect drawRect = { 
 			screenPos.x, 
 			screenPos.y,
-			rect.w * camera.zoom, 
-			rect.h * camera.zoom 
+			width * camera.zoom, 
+			height * camera.zoom 
 		};
 		SDL_RenderFillRect(renderer, &drawRect);
 	}
@@ -47,7 +53,7 @@ void UIButton::HandleEvent(const SDL_Event& event)
 		int mouseX, mouseY;
 		SDL_GetMouseState(&mouseX, &mouseY);
 
-		isHovered = mouseX >= rect.x && mouseX <= rect.x + rect.w && mouseY >= rect.y && mouseY <= rect.y + rect.h;
+		//isHovered = mouseX >= rect.x && mouseX <= rect.x + rect.w && mouseY >= rect.y && mouseY <= rect.y + rect.h;
 	}
 	if (event.type == SDL_MOUSEBUTTONDOWN)
 	{
@@ -64,4 +70,31 @@ void UIButton::HandleEvent(const SDL_Event& event)
 void UIButton::SetOnClick(std::function<void()> callback)
 {
 	OnClick = callback;
+}
+
+void UIButton::CheckHover(const Vector2D& mousePos, const Camera& camera, const Vector2D& screenSize)
+{
+	if (!m_isFixedToScreen)
+	{
+		Vector2D screenPos = camera.ConvertWorldToScreen(Vector2D(m_posX, m_posY), screenSize);
+		isHovered = mousePos.x >= screenPos.x && mousePos.x <= screenPos.x + width * camera.zoom && mousePos.y >= screenPos.y && mousePos.y <= screenPos.y + height * camera.zoom;
+	}
+	else
+	{
+		isHovered = mousePos.x >= m_posX && mousePos.x <= m_posX + width && mousePos.y >= m_posY && mousePos.y <= m_posY + height;
+	}
+}
+
+void UIButton::SetPosX(int x)
+{
+	int difference = x - m_posX;
+	label->SetPosX(label->GetPosX() + difference);
+	UIElement::SetPosX(x);
+}
+
+void UIButton::SetPosY(int y)
+{
+	int difference = y - m_posY;
+	label->SetPosY(label->GetPosY() + difference);
+	UIElement::SetPosY(y);
 }

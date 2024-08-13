@@ -19,8 +19,14 @@ public:
 	// Set the function that runs if the button is clicked
 	void SetOnClick(std::function<void()> callback);
 
+	void CheckHover(const Vector2D& mousePos, const Camera& camera, const Vector2D& screenSize) override;
+	
+	void SetPosX(int x) override;
+	void SetPosY(int y) override;
+
 private:
-	SDL_Rect rect;
+	int width;
+	int height;
 	SDL_Color color; 
 	SDL_Color hoveredColor = { 100, 100, 200, 255 };
 	std::unique_ptr<UILabel> label;

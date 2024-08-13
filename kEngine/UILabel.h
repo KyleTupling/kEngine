@@ -17,8 +17,6 @@ public:
 	void HandleEvent(const SDL_Event& event) override;
 	void UpdateTexture();
 
-	int GetPosX() const;
-	int GetPosY() const;
 	int GetWidth() const;
 	int GetHeight() const;
 	const std::string& GetText() const;
@@ -41,6 +39,8 @@ public:
 	void SetTextUpdater(std::function<void()> callback);
 
 private:
+	int width;
+	int height;
 	std::string text;
 	TTF_Font* font;
 	SDL_Color textColor;

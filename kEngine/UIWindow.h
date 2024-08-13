@@ -26,21 +26,20 @@ public:
 	 */
 	void AddUIElement(std::unique_ptr<UIElement> element);
 
-	int GetPosX() const;
-	int GetPosY() const;
 	int GetWidth() const;
 	int GetHeight() const;
 	bool GetIsDisplayed() const;
 
-	void SetPosX(int x);
-	void SetPosY(int y);
+	void SetPosX(int x) override;
+	void SetPosY(int y) override;
 	void SetWidth(int w);
 	void SetHeight(int h);
 	void SetIsDisplayed(bool isDisplayed);
+	void SetIsFixedToScreen(bool isFixed) override;
+
+	void CheckHover(const Vector2D& mousePos, const Camera& camera, const Vector2D& screenSize) override;
 
 private:
-	int posX;
-	int posY;
 	int width;
 	int height;
 
