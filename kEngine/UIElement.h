@@ -11,11 +11,19 @@ public:
 	virtual void HandleEvent(const SDL_Event& event) = 0;
 	virtual ~UIElement() {}
 
+	virtual void CheckHover(const Vector2D& mousePos, const Camera& camera, const Vector2D& screenSize) { };
+
+	virtual int GetPosX() const { return m_posX; }
+	virtual int GetPosY() const { return m_posY; }
 	bool GetIsFixedToScreen() const { return m_isFixedToScreen; }
 
-	void SetIsFixedToScreen(bool isFixed) { m_isFixedToScreen = isFixed; }
+	virtual void SetPosX(int x) { m_posX = x; }
+	virtual void SetPosY(int y) { m_posY = y; }
+	virtual void SetIsFixedToScreen(bool isFixed) { m_isFixedToScreen = isFixed; }
 
 protected:
+	int m_posX;
+	int m_posY;
 	bool m_isFixedToScreen = true; // Whether UIElement position is fixed on screen
 };
 
