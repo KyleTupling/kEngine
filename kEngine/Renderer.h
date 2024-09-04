@@ -2,6 +2,7 @@
 
 #include <SDL.h>
 #include "Camera.h"
+#include "Vector2D.h"
 
 class Renderer
 {
@@ -13,7 +14,7 @@ public:
 	/**
 	 Clears the screen.
 	 */
-	void Clear() const;
+	void Clear(SDL_Color color) const;
 
 	/**
 	 Updates the screen with any renderering performed since last call.
@@ -43,6 +44,17 @@ public:
 	 * @note Treats the given screen position as the center of the rectangle.
 	 */
 	void DrawRectOnScreen(const Vector2D& screenPos, int width, int height, SDL_Color color) const;
+
+	/**
+	 * Draws a circle to the screen using screen coorindates.
+	 *
+	 * @param screenPos The screen position of the circle center
+	 * @param radius The radius of the circle
+	 * @param color The RGBA color of the circle
+	 *
+	 * @note Treats the given screen position as the center of the circle.
+	 */
+	void DrawCircleOnScreen(const Vector2D& screenPos, int radius, SDL_Color color) const;
 
 	/**
 	 * Draws a texture to the screen using world coorindates.

@@ -18,8 +18,9 @@ Renderer::~Renderer()
 	}
 }
 
-void Renderer::Clear() const
+void Renderer::Clear(SDL_Color color) const
 {
+	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_Renderer);
 }
 
@@ -33,8 +34,8 @@ void Renderer::DrawRectInWorld(const Vector2D& worldPos, int width, int height, 
 	Vector2D screenPos = m_Camera->ConvertWorldToScreen(worldPos, m_ScreenSize);
 
 	SDL_Rect rect = {
-		screenPos.x - width / 2 * m_Camera->zoom,
-		screenPos.y - height / 2 * m_Camera->zoom,
+		(screenPos.x - width / 2) * m_Camera->zoom,
+		(screenPos.y - height / 2) * m_Camera->zoom,
 		width * m_Camera->zoom,
 		height * m_Camera->zoom
 	};
@@ -46,14 +47,44 @@ void Renderer::DrawRectInWorld(const Vector2D& worldPos, int width, int height, 
 void Renderer::DrawRectOnScreen(const Vector2D& screenPos, int width, int height, SDL_Color color) const
 {
 	SDL_Rect rect = {
-			screenPos.x - width / 2 * m_Camera->zoom,
-			screenPos.y - height / 2 * m_Camera->zoom,
+			(screenPos.x - width / 2) * m_Camera->zoom,
+			(screenPos.y - height / 2) * m_Camera->zoom,
 			width * m_Camera->zoom,
 			height * m_Camera->zoom
 	};
 
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderFillRect(m_Renderer, &rect);
+}
+
+void Renderer::DrawCircleOnScreen(const Vector2D& screenPos, int radius, SDL_Color color) const
+{
+	int x = radius;
+	int y = 0;
+	int radiusError = 1 - x;
+
+	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
+
+	while (x >= y) {
+		// Draw points in all eight octants
+		SDL_RenderDrawPoint(m_Renderer, screenPos.x + x, screenPos.y + y);
+		SDL_RenderDrawPoint(m_Renderer, screenPos.x - x, screenPos.y + y);
+		SDL_RenderDrawPoint(m_Renderer, screenPos.x + x, screenPos.y - y);
+		SDL_RenderDrawPoint(m_Renderer, screenPos.x - x, screenPos.y - y);
+		SDL_RenderDrawPoint(m_Renderer, screenPos.x + y, screenPos.y + x);
+		SDL_RenderDrawPoint(m_Renderer, screenPos.x - y, screenPos.y + x);
+		SDL_RenderDrawPoint(m_Renderer, screenPos.x + y, screenPos.y - x);
+		SDL_RenderDrawPoint(m_Renderer, screenPos.x - y, screenPos.y - x);
+
+		++y;
+		if (radiusError < 0) {
+			radiusError += 2 * y + 1;
+		}
+		else {
+			--x;
+			radiusError += 2 * (y - x + 1);
+		}
+	}
 }
 
 void Renderer::DrawTextureInWorld(SDL_Texture* texture, const Vector2D& worldPos, int width, int height) const
