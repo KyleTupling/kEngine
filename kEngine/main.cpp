@@ -113,9 +113,9 @@ int main(int argv, char** args)
     TTF_Font* pausedFont = TTF_OpenFont("C:/Users/PC/Desktop/cpp/ARIAL.TTF", 20);
     TTF_Font* bodyFont = TTF_OpenFont("C:/Users/PC/Desktop/cpp/ARIAL.TTF", 18);
 
-    //auto pausedLabel = std::make_unique<UILabel>(renderer, 1280 - 100, 50, "PAUSED", pausedFont, colorWhite, colorBlack);
-    //pausedLabel->SetDrawBackground(true);
-
+    auto pausedLabel = std::make_unique<UILabel>(mainRenderer, Vector2D(1280 - 100, 50), "PAUSED", pausedFont, colorWhite, colorBlack);
+    pausedLabel->SetDrawBackground(true);
+    pausedLabel->SetTextColor({ 255, 0, 0, 255 });
     //auto bodyLabel = std::make_unique<UILabel>(renderer, static_cast<int>(body1.position.x), static_cast<int>(body1.position.y + body1.radius) + 10, "Planet", bodyFont, colorBlack, colorWhite);
     //bodyLabel->SetIsFixedToScreen(false);
 
@@ -248,10 +248,10 @@ int main(int argv, char** args)
             //}
         }
 
-        /*if (isPaused)
+        if (isPaused)
         {
-            pausedLabel->Draw(renderer, camera, screenSize);
-        }*/
+            pausedLabel->Draw(mainRenderer);
+        }
 
         body2.Draw(mainRenderer);
         body1.Draw(mainRenderer);
