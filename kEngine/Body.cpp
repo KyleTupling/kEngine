@@ -1,95 +1,217 @@
 #include "Body.h"
 
-Body::Body() : position(0, 0), velocity(0, 0), acceleration(0, 0) {}
+Body::Body() : m_Position(0, 0), m_Velocity(0, 0), m_Acceleration(0, 0) {}
 
-Body::Body(const Vector2D& pos, const Vector2D& vel) : position(pos), velocity(vel), acceleration(0, 0) {}
+Body::Body(const Vector2D& pos, const Vector2D& vel) : m_Position(pos), m_Velocity(vel), m_Acceleration(0, 0) {}
 
 // Using inline to optimise function calls every frame
 inline void Body::ApplyForce(const Vector2D& force)
 {
 	// Acceleration = Force / Mass
-	Vector2D acc = force.Divide(mass);
-	acceleration = acceleration + acc;
+	Vector2D acc = force.Divide(m_Mass);
+    m_Acceleration = m_Acceleration + acc;
 }
 
 void Body::AttractBody(Body& body)
 {
-    Vector2D dir = Vector2D::Subtract(this->position, body.position);
+    Vector2D dir = Vector2D::Subtract(m_Position, body.GetPosition());
     double dirMag = dir.GetMagnitude();
     if (dirMag != 0) // Prevent division by zero
     {
         Vector2D unitDir = dir / dirMag;
-        double forceMag = (PhysicsConstants::G * this->mass * body.mass) / (dirMag * dirMag);
+        double forceMag = (PhysicsConstants::G * m_Mass * body.GetMass()) / (dirMag * dirMag);
         Vector2D force = unitDir.Multiply(forceMag);
         body.ApplyForce(force);
     }   
 }
 
-void Body::UpdatePreviousPositions()
+void Body::UpdatePositionHistory()
 {
     // If previous position list is empty, add current position
-    if (this->previousPositions.size() == 0 || abs((this->position - this->previousPositions.back()).GetMagnitudeSqr()) > this->minimumPrevDist)
+    if (m_PositionHistory.size() == 0 || abs((m_Position - m_PositionHistory.back()).GetMagnitudeSqr()) > m_MinimumPreviousPosDist)
     {
-        this->previousPositions.push_back(this->position);
+        m_PositionHistory.push_back(m_Position);
     }
 
     // Ensure previous position list doesn't store more than maximum amount of positions
-    if (this->previousPositions.size() > this->maximumPrevPos)
+    if (m_PositionHistory.size() > m_MaximumPosHistorySize)
     {
-        this->previousPositions.pop_front();
+        m_PositionHistory.pop_front();
     }
 }
 
 void Body::UpdateKinematics(double deltaTime)
 {
-    this->velocity = this->velocity + this->acceleration * deltaTime;
-    this->position = this->position + this->velocity * deltaTime;
-    this->acceleration.Set(0, 0);
+    m_Velocity = m_Velocity + m_Acceleration * deltaTime;
+    m_Position = m_Position + m_Velocity * deltaTime;
+    m_Acceleration.Set(0, 0);
 }
 
 void Body::Update(double deltaTime)
 {
-    UpdatePreviousPositions();
+    UpdatePositionHistory();
     UpdateKinematics(deltaTime);
 }
 
-void Body::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize) const
+void Body::Draw(Renderer& renderer) const
 {
-    Vector2D screenPos = camera.ConvertWorldToScreen(position, screenSize);
-
     // Check whether to draw previous positions
-    if (this->drawPrevious)
+    if (m_ShouldDrawPosHistory)
     {
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 100);
-        for (const auto& prevPos : this->previousPositions)
+        for (const auto& prevPos : m_PositionHistory)
         {
             constexpr int PREVPOS_RECT_SIZE = 2;
             constexpr int PREVPOS_RECT_OFFSET = 1;
-            Vector2D prevScreenPos = camera.ConvertWorldToScreen(prevPos, screenSize);
-            SDL_Rect rect{ static_cast<int>(std::round(prevScreenPos.x)) - PREVPOS_RECT_OFFSET, static_cast<int>(std::round(prevScreenPos.y)) - PREVPOS_RECT_OFFSET, PREVPOS_RECT_SIZE, PREVPOS_RECT_SIZE }; // TODO: Fix double->int conversion
-            SDL_RenderFillRect(renderer, &rect);
+            renderer.DrawRectInWorld(prevPos, PREVPOS_RECT_SIZE, PREVPOS_RECT_SIZE, { 0, 0, 0, 100 });
         }
     }
 
-    if (isHovered)
-        SDL_SetRenderDrawColor(renderer, hoveredColor.r, hoveredColor.g, hoveredColor.b, hoveredColor.a);
-    else
-        SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    SDL_Color drawColor = m_IsHovered ? m_HoveredColor : m_Color;
 
-    SDL_Rect bodyRect = {
-        static_cast<int>(screenPos.x - radius * camera.zoom),
-        static_cast<int>(screenPos.y - radius * camera.zoom),
-        static_cast<int>(radius * 2 * camera.zoom),
-        static_cast<int>(radius * 2 * camera.zoom)
-    };
-
-    SDL_RenderFillRect(renderer, &bodyRect);
+    renderer.DrawRectInWorld(m_Position, m_Radius * 2, m_Radius * 2, drawColor);
 }
 
 void Body::CheckHover(const Vector2D& mousePos, const Camera& camera, const Vector2D& screenSize)
 {
-    Vector2D screenPos = camera.ConvertWorldToScreen(position, screenSize);
+    Vector2D screenPos = camera.ConvertWorldToScreen(m_Position, screenSize);
 
     double distSqr = (mousePos - screenPos).GetMagnitudeSqr();
-    isHovered = distSqr <= (radius * radius * camera.zoom * camera.zoom);
+    m_IsHovered = distSqr <= (m_Radius * m_Radius * camera.zoom * camera.zoom);
+}
+
+bool Body::GetActive() const
+{
+    return m_IsActive;
+}
+
+void Body::SetActive(bool isActive)
+{
+    m_IsActive = isActive;
+}
+
+int Body::GetRadius() const
+{
+    return m_Radius;
+}
+
+void Body::SetRadius(int radius)
+{
+    m_Radius = radius;
+}
+
+double Body::GetMass() const
+{
+    return m_Mass;
+}
+
+void Body::SetMass(double mass)
+{
+    m_Mass = mass;
+}
+
+const Vector2D& Body::GetPosition() const
+{
+    return m_Position;
+}
+
+void Body::SetPosition(const Vector2D& position)
+{
+    m_Position = position;
+}
+
+const Vector2D& Body::GetVelocity() const
+{
+    return m_Velocity;
+}
+
+void Body::SetVelocity(const Vector2D& velocity)
+{
+    m_Velocity = velocity;
+}
+
+const Vector2D& Body::GetAcceleration() const
+{
+    return m_Acceleration;
+}
+
+void Body::SetAcceleration(const Vector2D& acceleration)
+{
+    m_Acceleration = acceleration;
+}
+
+const std::deque<Vector2D>& Body::GetPositionHistory() const
+{
+    return m_PositionHistory;
+}
+
+size_t Body::GetMaximumPosHistorySize() const
+{
+    return m_MaximumPosHistorySize;
+}
+
+void Body::SetMaximumPosHistorySize(size_t size)
+{
+    m_MaximumPosHistorySize = size;
+    // If the new size is smaller than previously, remove excess position history
+    while (m_PositionHistory.size() > m_MaximumPosHistorySize)
+    {
+        m_PositionHistory.pop_front();
+    }
+}
+
+bool Body::GetShouldDrawPosHistory() const
+{
+    return m_ShouldDrawPosHistory;
+}
+
+void Body::SetShouldDrawPosHistory(bool shouldDraw)
+{
+    m_ShouldDrawPosHistory = shouldDraw;
+}
+
+int Body::GetMinimumPrevPosDist() const
+{
+    return m_MinimumPreviousPosDist;
+}
+
+void Body::SetMinimumPrevPosDist(int minDist)
+{
+    if (minDist > 0)
+    {
+        m_MinimumPreviousPosDist = minDist;
+    }
+    else
+    {
+        m_MinimumPreviousPosDist = 1;
+    }
+}
+
+SDL_Color Body::GetColor() const
+{
+    return m_Color;
+}
+
+void Body::SetColor(SDL_Color color)
+{
+    m_Color = color;
+}
+
+SDL_Color Body::GetHoveredColor() const
+{
+    return m_HoveredColor;
+}
+
+void Body::SetHoveredColor(SDL_Color color)
+{
+    m_HoveredColor = color;
+}
+
+bool Body::GetIsHovered() const
+{
+    return m_IsHovered;
+}
+
+void Body::SetIsHovered(bool isHovered)
+{
+    m_IsHovered = isHovered;
 }
