@@ -30,7 +30,7 @@ void UILabel::Draw(const Renderer& renderer)
 		{
 			if (drawBackground)
 			{
-				renderer.DrawRectOnScreen(m_Position - Vector2D(10, 10), width, height, backgroundColor);
+				renderer.DrawRectOnScreen(m_Position, width + 20, height + 20, backgroundColor);
 			}
 			renderer.DrawTextureOnScreen(texture, m_Position, width, height);
 		}
