@@ -138,6 +138,7 @@
     <ClCompile Include="Body.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="UIButton.cpp" />
     <ClCompile Include="UILabel.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="MathFunctions.h" />
     <ClInclude Include="PhysicsConstants.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="UIButton.h" />
     <ClInclude Include="UIElement.h" />

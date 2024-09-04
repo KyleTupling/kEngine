@@ -6,6 +6,7 @@
 #include <cmath>
 #include <memory>
 
+#include "Renderer.h"
 #include "Vector2D.h"
 #include "Body.h"
 #include "Camera.h"
@@ -147,6 +148,7 @@ int main(int argv, char** args)
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     Camera camera(Vector2D(screenSize.x / 2, screenSize.y / 2), 1.0f);
+    //Renderer mainRenderer(window, screenSize, &camera);
 
     // Initialise fonts
     TTF_Font* pausedFont = TTF_OpenFont("C:/Users/PC/Desktop/cpp/ARIAL.TTF", 20);
@@ -160,7 +162,7 @@ int main(int argv, char** args)
 
     auto mainWindow = std::make_unique<UIWindow>(renderer, body1.position.x + 50, body1.position.y - 20, 400, 200, "Planet", bodyFont);
     mainWindow->SetIsFixedToScreen(false);
-    auto windowButton = std::make_unique<UIButton>(renderer, mainWindow->GetPosX(), mainWindow->GetPosY() + mainWindow->GetHeight() - 40, mainWindow->GetWidth(), 40, "Test", bodyFont, colorGrey);
+    auto windowButton = std::make_unique<UIButton>(renderer, mainWindow->GetPosX(), mainWindow->GetPosY() + mainWindow->GetHeight() - 40, mainWindow->GetWidth(), 40, "Change Body Color", bodyFont, colorGrey);
     windowButton->SetOnClick([&body1]()
         {
             body1.color.r = 100;
@@ -300,6 +302,8 @@ int main(int argv, char** args)
         mainWindow->Draw(renderer, camera, screenSize);
 
         // Draw cursor
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        DrawCircle(renderer, cursorPos.x, cursorPos.y, 6);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         DrawCircle(renderer, cursorPos.x, cursorPos.y, 5);
 
