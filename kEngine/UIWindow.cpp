@@ -117,6 +117,7 @@ bool UIWindow::GetIsDisplayed() const
 
 void UIWindow::SetPosition(const Vector2D& position)
 {
+	// Translate all child elements
 	Vector2D difference = position - m_Position;
 	
 	windowCloseButton->SetPosition(windowCloseButton->GetPosition() + difference);

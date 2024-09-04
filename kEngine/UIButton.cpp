@@ -16,15 +16,6 @@ void UIButton::Draw(const Renderer& renderer)
 {
 	label->SetIsFixedToScreen(m_IsFixedToScreen);
 
-	/*if (isHovered)
-	{
-		SDL_SetRenderDrawColor(renderer, hoveredColor.r, hoveredColor.g, hoveredColor.b, hoveredColor.a);
-	}
-	else
-	{
-		SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-	}*/
-
 	SDL_Color drawColor = isHovered ? color : hoveredColor;
 	
 	if (m_IsFixedToScreen)
@@ -79,6 +70,7 @@ void UIButton::CheckHover(const Vector2D& mousePos, const Renderer& renderer)
 
 void UIButton::SetPosition(const Vector2D& position)
 {
+	// Translate child elements
 	Vector2D difference = position - m_Position;
 	label->SetPosition(label->GetPosition() + difference);
 }
