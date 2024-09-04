@@ -34,10 +34,10 @@ void Renderer::DrawRectInWorld(const Vector2D& worldPos, int width, int height, 
 	Vector2D screenPos = m_Camera->ConvertWorldToScreen(worldPos, m_ScreenSize);
 
 	SDL_Rect rect = {
-		(screenPos.x - width / 2) * m_Camera->zoom,
-		(screenPos.y - height / 2) * m_Camera->zoom,
-		width * m_Camera->zoom,
-		height * m_Camera->zoom
+		static_cast<int>((screenPos.x - width / 2) * m_Camera->zoom),
+		static_cast<int>((screenPos.y - height / 2) * m_Camera->zoom),
+		static_cast<int>(width * m_Camera->zoom),
+		static_cast<int>(height * m_Camera->zoom)
 	};
 
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
@@ -47,10 +47,10 @@ void Renderer::DrawRectInWorld(const Vector2D& worldPos, int width, int height, 
 void Renderer::DrawRectOnScreen(const Vector2D& screenPos, int width, int height, SDL_Color color) const
 {
 	SDL_Rect rect = {
-			(screenPos.x - width / 2) * m_Camera->zoom,
-			(screenPos.y - height / 2) * m_Camera->zoom,
-			width * m_Camera->zoom,
-			height * m_Camera->zoom
+			static_cast<int>((screenPos.x - width / 2) * m_Camera->zoom),
+			static_cast<int>((screenPos.y - height / 2) * m_Camera->zoom),
+			static_cast<int>(width * m_Camera->zoom),
+			static_cast<int>(height * m_Camera->zoom)
 	};
 
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
@@ -92,10 +92,10 @@ void Renderer::DrawTextureInWorld(SDL_Texture* texture, const Vector2D& worldPos
 	Vector2D screenPos = m_Camera->ConvertWorldToScreen(worldPos, m_ScreenSize);
 
 	SDL_Rect rect = {
-		screenPos.x - (width / 2) * m_Camera->zoom,
-		screenPos.y + (height / 2) * m_Camera->zoom,
-		width * m_Camera->zoom,
-		height * m_Camera->zoom
+		static_cast<int>(screenPos.x - (width / 2) * m_Camera->zoom),
+		static_cast<int>(screenPos.y + (height / 2) * m_Camera->zoom),
+		static_cast<int>(width * m_Camera->zoom),
+		static_cast<int>(height * m_Camera->zoom)
 	};
 
 	SDL_RenderCopy(m_Renderer, texture, NULL, &rect);
@@ -104,11 +104,27 @@ void Renderer::DrawTextureInWorld(SDL_Texture* texture, const Vector2D& worldPos
 void Renderer::DrawTextureOnScreen(SDL_Texture* texture, const Vector2D& screenPos, int width, int height) const
 {
 	SDL_Rect rect = {
-			screenPos.x - (width / 2) * m_Camera->zoom,
-			screenPos.y + (height / 2) * m_Camera->zoom,
-			width * m_Camera->zoom,
-			height * m_Camera->zoom
+			static_cast<int>(screenPos.x - (width / 2) * m_Camera->zoom),
+			static_cast<int>(screenPos.y + (height / 2) * m_Camera->zoom),
+			static_cast<int>(width * m_Camera->zoom),
+			static_cast<int>(height * m_Camera->zoom)
 	};
 
 	SDL_RenderCopy(m_Renderer, texture, NULL, &rect);
+}
+
+SDL_Texture* Renderer::CreateTexture(SDL_Surface* surface) const
+{
+	return SDL_CreateTextureFromSurface(m_Renderer, surface);
+}
+
+bool Renderer::IsPointInWorldRect(const Vector2D& point, const Vector2D& rectPos, int rectWidth, int rectHeight) const
+{
+	Vector2D rectScreenPos = m_Camera->ConvertWorldToScreen(rectPos, m_ScreenSize);
+	return point.x >= rectScreenPos.x && point.x <= rectScreenPos.x + rectWidth * m_Camera->zoom && point.y >= rectScreenPos.y && point.y <= rectScreenPos.y + rectHeight * m_Camera->zoom;
+}
+
+bool Renderer::IsPointInScreenRect(const Vector2D& point, const Vector2D& rectPos, int rectWidth, int rectHeight) const
+{
+	return point.x >= rectPos.x && point.x <= rectPos.x + rectWidth && point.y >= rectPos.y && point.y <= rectPos.y + rectHeight;
 }

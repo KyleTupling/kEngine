@@ -80,6 +80,18 @@ public:
 	 */
 	void DrawTextureOnScreen(SDL_Texture* texture, const Vector2D& screenPos, int width, int height) const;
 
+	/**
+	 * Creates an SDL_Texture from the given SDL_Surface
+	 *
+	 * @param surface The SDL_Surface
+	 *
+	 * @return The SDL_Texture
+	 */
+	SDL_Texture* CreateTexture(SDL_Surface* surface) const;
+
+	bool IsPointInWorldRect(const Vector2D& point, const Vector2D& rectPos, int rectWidth, int rectHeight) const;
+	bool IsPointInScreenRect(const Vector2D& point, const Vector2D& rectPos, int rectWidth, int rectHeight) const;
+
 private:
 	SDL_Renderer* m_Renderer;
 	Camera* m_Camera;
