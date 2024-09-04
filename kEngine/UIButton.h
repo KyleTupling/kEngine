@@ -12,17 +12,16 @@
 class UIButton : public UIElement
 {
 public:
-	UIButton(SDL_Renderer* renderer, int x, int y, int w, int h, const std::string& text, TTF_Font* font, SDL_Color color);
-	void Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize) override;
+	UIButton(const Renderer& renderer, const Vector2D& position, int w, int h, const std::string& text, TTF_Font* font, SDL_Color color);
+	void Draw(const Renderer& renderer) override;
 	void HandleEvent(const SDL_Event& event) override;
 
 	// Set the function that runs if the button is clicked
 	void SetOnClick(std::function<void()> callback);
 
-	void CheckHover(const Vector2D& mousePos, const Camera& camera, const Vector2D& screenSize) override;
+	void CheckHover(const Vector2D& mousePos, const Renderer& renderer) override;
 	
-	void SetPosX(int x) override;
-	void SetPosY(int y) override;
+	void SetPosition(const Vector2D& position) override;
 
 private:
 	int width;

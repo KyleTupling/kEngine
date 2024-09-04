@@ -1,30 +1,27 @@
 #pragma once
 
 #include <SDL.h>
-#include "Camera.h"
+#include "Renderer.h"
 #include "Vector2D.h"
 
 class UIElement
 {
 public:
-	virtual void Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize) = 0;
+	virtual void Draw(const Renderer& renderer) = 0;
 	virtual void HandleEvent(const SDL_Event& event) = 0;
 	virtual ~UIElement() {}
 
-	virtual void CheckHover(const Vector2D& mousePos, const Camera& camera, const Vector2D& screenSize) { };
+	virtual void CheckHover(const Vector2D& mousePos, const Renderer& renderer) { };
 
-	virtual int GetPosX() const { return m_posX; }
-	virtual int GetPosY() const { return m_posY; }
+	virtual const Vector2D& GetPosition() const { return m_Position; };
+	virtual void SetPosition(const Vector2D& position) { m_Position = position; };
 
-	bool GetIsFixedToScreen() const { return m_isFixedToScreen; }
+	bool GetIsFixedToScreen() const { return m_IsFixedToScreen; }
 
-	virtual void SetPosX(int x) { m_posX = x; }
-	virtual void SetPosY(int y) { m_posY = y; }
-	virtual void SetIsFixedToScreen(bool isFixed) { m_isFixedToScreen = isFixed; }
+	virtual void SetIsFixedToScreen(bool isFixed) { m_IsFixedToScreen = isFixed; }
 
 protected:
-	int m_posX;
-	int m_posY;
-	bool m_isFixedToScreen = true; // Whether UIElement position is fixed on screen
+	Vector2D m_Position;
+	bool m_IsFixedToScreen = true; // Whether UIElement position is fixed on screen
 };
 

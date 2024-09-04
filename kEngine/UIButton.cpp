@@ -2,48 +2,41 @@
 
 extern SDL_Color colorWhite;
 
-UIButton::UIButton(SDL_Renderer* renderer, int x, int y, int w, int h, const std::string& text, TTF_Font* font, SDL_Color color)
+UIButton::UIButton(const Renderer& renderer, const Vector2D& position, int w, int h, const std::string& text, TTF_Font* font, SDL_Color color)
 	: font(font), color(color)
 {
-	m_posX = x;
-	m_posY = y;
+	m_Position = position;
 	width = w;
 	height = h;
 
-	label = std::make_unique<UILabel>(renderer, x + w / 2, y + h / 2 - 10, text, font, colorWhite);
+	label = std::make_unique<UILabel>(renderer, Vector2D(position.x + w / 2, position.y + h / 2 - 10), text, font, colorWhite);
 }
 
-void UIButton::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize)
+void UIButton::Draw(const Renderer& renderer)
 {
-	label->SetIsFixedToScreen(m_isFixedToScreen);
+	label->SetIsFixedToScreen(m_IsFixedToScreen);
 
-	if (isHovered)
+	/*if (isHovered)
 	{
 		SDL_SetRenderDrawColor(renderer, hoveredColor.r, hoveredColor.g, hoveredColor.b, hoveredColor.a);
 	}
 	else
 	{
 		SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-	}
+	}*/
+
+	SDL_Color drawColor = isHovered ? color : hoveredColor;
 	
-	if (m_isFixedToScreen)
+	if (m_IsFixedToScreen)
 	{
-		SDL_Rect rect{ m_posX, m_posY, width, height };
-		SDL_RenderFillRect(renderer, &rect);
+		renderer.DrawRectOnScreen(m_Position, width, height, drawColor);
 	}
 	else
 	{
-		Vector2D screenPos = camera.ConvertWorldToScreen(Vector2D(m_posX, m_posY), screenSize);
-		SDL_Rect drawRect = { 
-			screenPos.x, 
-			screenPos.y,
-			width * camera.zoom, 
-			height * camera.zoom 
-		};
-		SDL_RenderFillRect(renderer, &drawRect);
+		renderer.DrawRectInWorld(m_Position, width, height, drawColor);
 	}
 	
-	label->Draw(renderer, camera, screenSize);
+	label->Draw(renderer);
 }
 
 void UIButton::HandleEvent(const SDL_Event& event)
@@ -72,29 +65,20 @@ void UIButton::SetOnClick(std::function<void()> callback)
 	OnClick = callback;
 }
 
-void UIButton::CheckHover(const Vector2D& mousePos, const Camera& camera, const Vector2D& screenSize)
+void UIButton::CheckHover(const Vector2D& mousePos, const Renderer& renderer)
 {
-	if (!m_isFixedToScreen)
+	if (!m_IsFixedToScreen)
 	{
-		Vector2D screenPos = camera.ConvertWorldToScreen(Vector2D(m_posX, m_posY), screenSize);
-		isHovered = mousePos.x >= screenPos.x && mousePos.x <= screenPos.x + width * camera.zoom && mousePos.y >= screenPos.y && mousePos.y <= screenPos.y + height * camera.zoom;
+		isHovered = renderer.IsPointInWorldRect(mousePos, m_Position, width, height);
 	}
 	else
 	{
-		isHovered = mousePos.x >= m_posX && mousePos.x <= m_posX + width && mousePos.y >= m_posY && mousePos.y <= m_posY + height;
+		isHovered = renderer.IsPointInScreenRect(mousePos, m_Position, width, height);
 	}
 }
 
-void UIButton::SetPosX(int x)
+void UIButton::SetPosition(const Vector2D& position)
 {
-	int difference = x - m_posX;
-	label->SetPosX(label->GetPosX() + difference);
-	UIElement::SetPosX(x);
-}
-
-void UIButton::SetPosY(int y)
-{
-	int difference = y - m_posY;
-	label->SetPosY(label->GetPosY() + difference);
-	UIElement::SetPosY(y);
+	Vector2D difference = position - m_Position;
+	label->SetPosition(label->GetPosition() + difference);
 }

@@ -10,12 +10,12 @@
 class UILabel : public UIElement
 {
 public:
-	UILabel(SDL_Renderer* renderer, int x, int y, const std::string& text, TTF_Font* font, SDL_Color textColor, SDL_Color backgroundColor = { 0, 0, 0, 0 });
+	UILabel(const Renderer& renderer, const Vector2D& position, const std::string& text, TTF_Font* font, SDL_Color textColor, SDL_Color backgroundColor = { 0, 0, 0, 0 });
 	~UILabel();
 
-	void Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize) override;
+	void Draw(const Renderer& renderer) override;
 	void HandleEvent(const SDL_Event& event) override;
-	void UpdateTexture();
+	void UpdateTexture(const Renderer& renderer);
 
 	int GetWidth() const;
 	int GetHeight() const;
@@ -24,8 +24,7 @@ public:
 	const SDL_Color& GetBackgroundColor() const;
 	bool GetDrawBackground() const;
 
-	void SetPosition(int x, int y);
-	void SetText(const std::string& text);
+	void SetText(const Renderer& renderer, const std::string& text);
 	void SetTextColor(const SDL_Color& color);
 	void SetBackgroundColor(const SDL_Color& color);
 
@@ -48,7 +47,6 @@ private:
 	bool drawBackground = false;
 
 	SDL_Rect rect;
-	SDL_Renderer* renderer;
 	SDL_Texture* texture;
 
 	std::function<void()> TextUpdater;

@@ -3,17 +3,16 @@
 extern SDL_Color colorWhite;
 extern SDL_Color colorBlack;
 
-UIWindow::UIWindow(SDL_Renderer* renderer, int posX, int posY, int width, int height, const std::string& title, TTF_Font* font)
+UIWindow::UIWindow(const Renderer& renderer, const Vector2D& position, int width, int height, const std::string& title, TTF_Font* font)
 	: width(width), height(height)
 {
-	m_posX = posX;
-	m_posY = posY;
+	m_Position = position;
 
 	// Does this need to be a unique pointer?
-	windowTitleLabel = std::make_unique<UILabel>(renderer, m_posX + width / 2, m_posY + 5, title, font, colorWhite, colorBlack);
+	windowTitleLabel = std::make_unique<UILabel>(renderer, Vector2D(m_Position.x + width / 2, m_Position.y + 5), title, font, colorWhite, colorBlack);
 	
 	// Create close button
-	windowCloseButton = std::make_unique<UIButton>(renderer, m_posX + width - 30, m_posY, 30, 30, "X", font, colorBlack);
+	windowCloseButton = std::make_unique<UIButton>(renderer, Vector2D(m_Position.x + width - 30, m_Position.y), 30, 30, "X", font, colorBlack);
 	windowCloseButton->SetOnClick([this]() 
 		{
 			this->Close(); 
@@ -25,52 +24,39 @@ UIWindow::~UIWindow()
 	// Smart pointers used (handle memory deallocation automatically)
 }
 
-void UIWindow::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize)
+void UIWindow::Draw(const Renderer& renderer)
 {
 	if (isDisplayed)
 	{
-		if (m_isFixedToScreen)
+		if (m_IsFixedToScreen)
 		{
-			SDL_Rect rect = { m_posX, m_posY, width, height };
-			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-			SDL_RenderFillRect(renderer, &rect);
+			renderer.DrawRectOnScreen(m_Position, width, height, { 0, 0, 0, 255 });
 
 			if (drawTitle) // Draw window titlebar
 			{
-				rect = { m_posX, m_posY, width, 30 };
-				SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
-				SDL_RenderFillRect(renderer, &rect);
-				windowTitleLabel->Draw(renderer, camera, screenSize);
+				renderer.DrawRectOnScreen(m_Position, width, 30, { 50, 50, 50, 255 });
+				windowTitleLabel->Draw(renderer);
 			}
 		}
 		else
 		{
-			Vector2D screenPos = camera.ConvertWorldToScreen(Vector2D(m_posX, m_posY), screenSize);
-			SDL_Rect rect = { screenPos.x, screenPos.y, width * camera.zoom, height * camera.zoom };
-			SDL_RenderFillRect(renderer, &rect);
+			renderer.DrawRectInWorld(m_Position, width, height, { 0, 0, 0, 255 });
 
 			if (drawTitle) // Draw window titlebar
 			{
-				rect = { 
-					static_cast<int>(screenPos.x), 
-					static_cast<int>(screenPos.y), 
-					static_cast<int>(width * camera.zoom),
-					static_cast < int>(30 * camera.zoom)
-				};
-				SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
-				SDL_RenderFillRect(renderer, &rect);
-				windowTitleLabel->Draw(renderer, camera, screenSize);
+				renderer.DrawRectInWorld(m_Position, width, 30, { 50, 50, 50, 255 });
+				windowTitleLabel->Draw(renderer);
 			}
 		}
 
 		if (drawCloseButton)
 		{
-			windowCloseButton->Draw(renderer, camera, screenSize);
+			windowCloseButton->Draw(renderer);
 		}
 
 		for (const auto& element : childrenElements)
 		{
-			element->Draw(renderer, camera, screenSize);
+			element->Draw(renderer);
 		}
 	}
 }
@@ -96,17 +82,17 @@ void UIWindow::Close()
 
 void UIWindow::AddUIElement(std::unique_ptr<UIElement> element)
 {
-	element->SetIsFixedToScreen(m_isFixedToScreen);
+	element->SetIsFixedToScreen(m_IsFixedToScreen);
 	childrenElements.push_back(std::move(element));
 }
 
-void UIWindow::CheckHover(const Vector2D& mousePos, const Camera& camera, const Vector2D& screenSize)
+void UIWindow::CheckHover(const Vector2D& mousePos, const Renderer& renderer)
 {
-	if (drawCloseButton) windowCloseButton->CheckHover(mousePos, camera, screenSize);
+	if (drawCloseButton) windowCloseButton->CheckHover(mousePos, renderer);
 
 	for (const auto& element : childrenElements)
 	{
-		element->CheckHover(mousePos, camera, screenSize);
+		element->CheckHover(mousePos, renderer);
 	}
 }
 
@@ -129,39 +115,17 @@ bool UIWindow::GetIsDisplayed() const
 
 // Setters
 
-void UIWindow::SetPosX(int x)
+void UIWindow::SetPosition(const Vector2D& position)
 {
-	int posDifference = x - m_posX;
-	UIElement::SetPosX(x);
+	Vector2D difference = position - m_Position;
+	
+	windowCloseButton->SetPosition(windowCloseButton->GetPosition() + difference);
 
-	int currentCloseBtnPosX = windowCloseButton->GetPosX();
-	windowCloseButton->SetPosX(currentCloseBtnPosX + posDifference);
-
-	int currentLabelPosX = windowTitleLabel->GetPosX();
-	windowTitleLabel->SetPosX(currentLabelPosX + posDifference);
+	windowTitleLabel->SetPosition(windowTitleLabel->GetPosition() + difference);
 
 	for (const auto& element : childrenElements)
 	{
-		int currentChildPosX = element->GetPosX();
-		element->SetPosX(currentChildPosX + posDifference);
-	}
-}
-
-void UIWindow::SetPosY(int y)
-{
-	int posDifference = y - m_posY;
-	UIElement::SetPosY(y);
-
-	int currentCloseBtnPosY = windowCloseButton->GetPosY();
-	windowCloseButton->SetPosY(currentCloseBtnPosY + posDifference);
-
-	int currentLabelPosY = windowTitleLabel->GetPosY();
-	windowTitleLabel->SetPosY(currentLabelPosY + posDifference);
-
-	for (const auto& element : childrenElements)
-	{
-		int currentChildPosY = element->GetPosY();
-		element->SetPosY(currentChildPosY + posDifference);
+		element->SetPosition(element->GetPosition() + difference);
 	}
 }
 
@@ -179,11 +143,12 @@ void UIWindow::SetIsDisplayed(bool isDisplayed)
 {
 	this->isDisplayed = isDisplayed;
 }
+
 void UIWindow::SetIsFixedToScreen(bool isFixed)
 {
 	UIElement::SetIsFixedToScreen(isFixed);
-	windowTitleLabel->SetIsFixedToScreen(m_isFixedToScreen);
-	windowCloseButton->SetIsFixedToScreen(m_isFixedToScreen);
+	windowTitleLabel->SetIsFixedToScreen(m_IsFixedToScreen);
+	windowCloseButton->SetIsFixedToScreen(m_IsFixedToScreen);
 	
 	// Apply same attribute to children elements
 	for (const auto& element : childrenElements)

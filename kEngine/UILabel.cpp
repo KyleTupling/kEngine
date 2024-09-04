@@ -1,11 +1,11 @@
 #include "UILabel.h"
 
-UILabel::UILabel(SDL_Renderer* renderer, int x, int y, const std::string& text, TTF_Font* font, SDL_Color textColor, SDL_Color backgroundColor)
-	: text(text), font(font), textColor(textColor), backgroundColor(backgroundColor), renderer(renderer), rect{ x, y, 0, 0 }
+UILabel::UILabel(const Renderer& renderer, const Vector2D& position, const std::string& text, TTF_Font* font, SDL_Color textColor, SDL_Color backgroundColor)
+	: text(text), font(font), textColor(textColor), backgroundColor(backgroundColor)
 {
-	m_posX = x;
-	m_posY = y;
-	UpdateTexture();
+	m_Position = position;
+	rect = { static_cast<int>(m_Position.x), static_cast<int>(m_Position.y), 0, 0 };
+	UpdateTexture(renderer);
 }
 
 UILabel::~UILabel()
@@ -17,7 +17,7 @@ UILabel::~UILabel()
 	}
 }
 
-void UILabel::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize)
+void UILabel::Draw(const Renderer& renderer)
 {
 	if (TextUpdater)
 	{
@@ -26,24 +26,17 @@ void UILabel::Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D&
 
 	if (texture)
 	{
-		if (m_isFixedToScreen)
+		if (m_IsFixedToScreen)
 		{
 			if (drawBackground)
 			{
-				SDL_SetRenderDrawColor(renderer, backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
-				SDL_Rect backgroundRect = { m_posX - width / 2 - 10, m_posY + height / 2 - 10 - 10, width + 20, height + 20 };
-				SDL_RenderFillRect(renderer, &backgroundRect);
+				renderer.DrawRectOnScreen(m_Position - Vector2D(10, 10), width, height, backgroundColor);
 			}
-			SDL_SetRenderDrawColor(renderer, textColor.r, textColor.g, textColor.b, textColor.a);
-			SDL_Rect drawRect = { m_posX - width / 2, m_posY + height / 2 - 10, width, height };
-			SDL_RenderCopy(renderer, texture, nullptr, &drawRect);
+			renderer.DrawTextureOnScreen(texture, m_Position, width, height);
 		}
 		else
 		{
-			Vector2D screenPos = camera.ConvertWorldToScreen(Vector2D(m_posX, m_posY), screenSize);
-			SDL_SetRenderDrawColor(renderer, textColor.r, textColor.g, textColor.b, textColor.a);
-			SDL_Rect drawRect = { screenPos.x -  (width / 2) * camera.zoom, screenPos.y + (height / 2 - 10) * camera.zoom, width * camera.zoom, height * camera.zoom };
-			SDL_RenderCopy(renderer, texture, nullptr, &drawRect);
+			renderer.DrawTextureInWorld(texture, m_Position, width, height);
 		}
 	}
 }
@@ -53,7 +46,7 @@ void UILabel::HandleEvent(const SDL_Event& event)
 
 }
 
-void UILabel::UpdateTexture()
+void UILabel::UpdateTexture(const Renderer& renderer)
 {
 	if (texture)
 	{
@@ -61,7 +54,7 @@ void UILabel::UpdateTexture()
 	}
 
 	SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), textColor);
-    texture = SDL_CreateTextureFromSurface(renderer, surface);
+	texture = renderer.CreateTexture(surface);
     SDL_FreeSurface(surface);
 
 	int w, h;
@@ -102,16 +95,10 @@ bool UILabel::GetDrawBackground() const
 	return drawBackground;
 }
 
-void UILabel::SetPosition(int x, int y)
-{
-	UIElement::SetPosX(x);
-	UIElement::SetPosY(y);
-}
-
-void UILabel::SetText(const std::string& text)
+void UILabel::SetText(const Renderer& renderer, const std::string& text)
 {
 	this->text = text;
-	UpdateTexture();
+	UpdateTexture(renderer);
 }
 
 void UILabel::SetTextColor(const SDL_Color& color)

@@ -10,10 +10,10 @@
 class UIWindow : public UIElement
 {
 public:
-	UIWindow(SDL_Renderer* renderer, int posX, int posY, int width, int height, const std::string& title, TTF_Font* font);
+	UIWindow(const Renderer& renderer, const Vector2D& position, int width, int height, const std::string& title, TTF_Font* font);
 	~UIWindow();
 
-	void Draw(SDL_Renderer* renderer, const Camera& camera, const Vector2D& screenSize) override;
+	void Draw(const Renderer& renderer) override;
 	void HandleEvent(const SDL_Event& event) override;
 	// Closes the window (stops displaying)
 	void Close();
@@ -30,14 +30,13 @@ public:
 	int GetHeight() const;
 	bool GetIsDisplayed() const;
 
-	void SetPosX(int x) override;
-	void SetPosY(int y) override;
+	void SetPosition(const Vector2D& position);
 	void SetWidth(int w);
 	void SetHeight(int h);
 	void SetIsDisplayed(bool isDisplayed);
 	void SetIsFixedToScreen(bool isFixed) override;
 
-	void CheckHover(const Vector2D& mousePos, const Camera& camera, const Vector2D& screenSize) override;
+	void CheckHover(const Vector2D& mousePos, const Renderer& renderer) override;
 
 private:
 	int width;
