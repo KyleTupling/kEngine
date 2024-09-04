@@ -15,6 +15,7 @@ public:
 
 	virtual int GetPosX() const { return m_posX; }
 	virtual int GetPosY() const { return m_posY; }
+
 	bool GetIsFixedToScreen() const { return m_isFixedToScreen; }
 
 	virtual void SetPosX(int x) { m_posX = x; }
