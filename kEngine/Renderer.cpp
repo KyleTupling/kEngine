@@ -47,10 +47,10 @@ void Renderer::DrawRectInWorld(const Vector2D& worldPos, int width, int height, 
 void Renderer::DrawRectOnScreen(const Vector2D& screenPos, int width, int height, SDL_Color color) const
 {
 	SDL_Rect rect = {
-			static_cast<int>((screenPos.x - width / 2) * m_Camera->zoom),
-			static_cast<int>((screenPos.y - height / 2) * m_Camera->zoom),
-			static_cast<int>(width * m_Camera->zoom),
-			static_cast<int>(height * m_Camera->zoom)
+			static_cast<int>((screenPos.x - width / 2)),
+			static_cast<int>((screenPos.y - height / 2)),
+			static_cast<int>(width),
+			static_cast<int>(height)
 	};
 
 	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
@@ -93,7 +93,7 @@ void Renderer::DrawTextureInWorld(SDL_Texture* texture, const Vector2D& worldPos
 
 	SDL_Rect rect = {
 		static_cast<int>(screenPos.x - (width / 2) * m_Camera->zoom),
-		static_cast<int>(screenPos.y + (height / 2) * m_Camera->zoom),
+		static_cast<int>(screenPos.y - (height / 2) * m_Camera->zoom),
 		static_cast<int>(width * m_Camera->zoom),
 		static_cast<int>(height * m_Camera->zoom)
 	};
@@ -104,12 +104,11 @@ void Renderer::DrawTextureInWorld(SDL_Texture* texture, const Vector2D& worldPos
 void Renderer::DrawTextureOnScreen(SDL_Texture* texture, const Vector2D& screenPos, int width, int height) const
 {
 	SDL_Rect rect = {
-			static_cast<int>(screenPos.x - (width / 2) * m_Camera->zoom),
-			static_cast<int>(screenPos.y + (height / 2) * m_Camera->zoom),
-			static_cast<int>(width * m_Camera->zoom),
-			static_cast<int>(height * m_Camera->zoom)
+			static_cast<int>(screenPos.x - (width / 2)),
+			static_cast<int>(screenPos.y - (height / 2)),
+			static_cast<int>(width),
+			static_cast<int>(height)
 	};
-
 	SDL_RenderCopy(m_Renderer, texture, NULL, &rect);
 }
 
