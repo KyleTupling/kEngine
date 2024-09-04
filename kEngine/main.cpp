@@ -52,45 +52,6 @@ std::string to_string(T x)
     return ss.str();
 }
 
-// Temporary procedure from SE
-void DrawCircle(SDL_Renderer* renderer, int32_t centreX, int32_t centreY, int32_t radius)
-{
-    const int32_t diameter = (radius * 2);
-
-    int32_t x = (radius - 1);
-    int32_t y = 0;
-    int32_t tx = 1;
-    int32_t ty = 1;
-    int32_t error = (tx - diameter);
-
-    while (x >= y)
-    {
-        //  Each of the following renders an octant of the circle
-        SDL_RenderDrawPoint(renderer, centreX + x, centreY - y);
-        SDL_RenderDrawPoint(renderer, centreX + x, centreY + y);
-        SDL_RenderDrawPoint(renderer, centreX - x, centreY - y);
-        SDL_RenderDrawPoint(renderer, centreX - x, centreY + y);
-        SDL_RenderDrawPoint(renderer, centreX + y, centreY - x);
-        SDL_RenderDrawPoint(renderer, centreX + y, centreY + x);
-        SDL_RenderDrawPoint(renderer, centreX - y, centreY - x);
-        SDL_RenderDrawPoint(renderer, centreX - y, centreY + x);
-
-        if (error <= 0)
-        {
-            ++y;
-            error += ty;
-            ty += 2;
-        }
-
-        if (error > 0)
-        {
-            --x;
-            tx += 2;
-            error += (tx - diameter);
-        }
-    }
-}
-
 void UpdateCamera(Camera& camera, const Vector2D& screenSize)
 {
     // Handle translation
@@ -127,15 +88,13 @@ int main(int argv, char** args)
     double deltaTime = 0;
 
     Body body1(Vector2D(200, 50), Vector2D(350, 0));
-    body1.color.b = 255;
-    body1.drawPrevious = true;
+    body1.SetColor({ 0, 0, 255, 0 });
+    body1.SetShouldDrawPosHistory(true);
 
     Body body2(Vector2D(500, 300), Vector2D(0, 0));
-    body2.radius = 15;
-    body2.color.r = 230;
-    body2.color.g = 180;
-    body2.color.b = 30;
-    body2.mass = 1e18;
+    body2.SetRadius(15);
+    body2.SetColor({ 230, 180, 30, 255 });
+    body2.SetMass(1e18);
 
     // Initialise SDL
     if (!InitializeSDL())
@@ -145,37 +104,37 @@ int main(int argv, char** args)
 
     // TODO: Create Engine class to manage SDL window, renderer etc.
     SDL_Window* window = SDL_CreateWindow("kEngine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenSize.x, screenSize.y, SDL_WINDOW_OPENGL);
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    //SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     Camera camera(Vector2D(screenSize.x / 2, screenSize.y / 2), 1.0f);
-    //Renderer mainRenderer(window, screenSize, &camera);
+    Renderer mainRenderer(window, screenSize, &camera);
 
     // Initialise fonts
     TTF_Font* pausedFont = TTF_OpenFont("C:/Users/PC/Desktop/cpp/ARIAL.TTF", 20);
     TTF_Font* bodyFont = TTF_OpenFont("C:/Users/PC/Desktop/cpp/ARIAL.TTF", 18);
 
-    auto pausedLabel = std::make_unique<UILabel>(renderer, 1280 - 100, 50, "PAUSED", pausedFont, colorWhite, colorBlack);
-    pausedLabel->SetDrawBackground(true);
+    //auto pausedLabel = std::make_unique<UILabel>(renderer, 1280 - 100, 50, "PAUSED", pausedFont, colorWhite, colorBlack);
+    //pausedLabel->SetDrawBackground(true);
 
-    auto bodyLabel = std::make_unique<UILabel>(renderer, static_cast<int>(body1.position.x), static_cast<int>(body1.position.y + body1.radius) + 10, "Planet", bodyFont, colorBlack, colorWhite);
-    bodyLabel->SetIsFixedToScreen(false);
+    //auto bodyLabel = std::make_unique<UILabel>(renderer, static_cast<int>(body1.position.x), static_cast<int>(body1.position.y + body1.radius) + 10, "Planet", bodyFont, colorBlack, colorWhite);
+    //bodyLabel->SetIsFixedToScreen(false);
 
-    auto mainWindow = std::make_unique<UIWindow>(renderer, body1.position.x + 50, body1.position.y - 20, 400, 200, "Planet", bodyFont);
-    mainWindow->SetIsFixedToScreen(false);
-    auto windowButton = std::make_unique<UIButton>(renderer, mainWindow->GetPosX(), mainWindow->GetPosY() + mainWindow->GetHeight() - 40, mainWindow->GetWidth(), 40, "Change Body Color", bodyFont, colorGrey);
-    windowButton->SetOnClick([&body1]()
-        {
-            body1.color.r = 100;
-        });
-    mainWindow->AddUIElement(std::move(windowButton));
-    auto windowLabel = std::make_unique<UILabel>(renderer, 180, 550, "(" + to_string(std::round(body1.position.x)) + ", " + to_string(std::round(body1.position.y)) + ")", bodyFont, colorWhite);
-    // Temporary: Store raw pointer to label to access within lambda function
-    auto* labelPtr = windowLabel.get();
-    windowLabel->SetTextUpdater([labelPtr, &body1]()
-        {
-            labelPtr->SetText("Position: (" + to_string(std::round(body1.position.x)) + ", " + to_string(std::round(body1.position.y)) + ")");
-        });
-    mainWindow->AddUIElement(std::move(windowLabel));
+    //auto mainWindow = std::make_unique<UIWindow>(renderer, body1.position.x + 50, body1.position.y - 20, 400, 200, "Planet", bodyFont);
+    //mainWindow->SetIsFixedToScreen(false);
+    //auto windowButton = std::make_unique<UIButton>(renderer, mainWindow->GetPosX(), mainWindow->GetPosY() + mainWindow->GetHeight() - 40, mainWindow->GetWidth(), 40, "Change Body Color", bodyFont, colorGrey);
+    //windowButton->SetOnClick([&body1]()
+    //    {
+    //        body1.color.r = 100;
+    //    });
+    //mainWindow->AddUIElement(std::move(windowButton));
+    //auto windowLabel = std::make_unique<UILabel>(renderer, 180, 550, "(" + to_string(std::round(body1.position.x)) + ", " + to_string(std::round(body1.position.y)) + ")", bodyFont, colorWhite);
+    //// Temporary: Store raw pointer to label to access within lambda function
+    //auto* labelPtr = windowLabel.get();
+    //windowLabel->SetTextUpdater([labelPtr, &body1]()
+    //    {
+    //        labelPtr->SetText("Position: (" + to_string(std::round(body1.position.x)) + ", " + to_string(std::round(body1.position.y)) + ")");
+    //    });
+    //mainWindow->AddUIElement(std::move(windowLabel));
 
     while (isRunning)
     {
@@ -206,13 +165,13 @@ int main(int argv, char** args)
                 isPaused = true;
             }
 
-            mainWindow->HandleEvent(event);
+            //mainWindow->HandleEvent(event);
 
             if (event.type == SDL_MOUSEMOTION)
             {
                 // Store current mouse position on mouse move
                 cursorPos.Set(event.motion.x, event.motion.y);
-                mainWindow->CheckHover(cursorPos, camera, screenSize);
+                //mainWindow->CheckHover(cursorPos, camera, screenSize);
                 body1.CheckHover(cursorPos, camera, screenSize);
             }
 
@@ -235,12 +194,12 @@ int main(int argv, char** args)
                 
                 if (event.key.keysym.sym == SDLK_m)
                 {
-                    if (!mainWindow->GetIsDisplayed()) mainWindow->SetIsDisplayed(true);
+                    //if (!mainWindow->GetIsDisplayed()) mainWindow->SetIsDisplayed(true);
                 }
 
                 if (event.key.keysym.sym == SDLK_n)
                 {
-                    mainWindow->SetIsFixedToScreen(!mainWindow->GetIsFixedToScreen());
+                    //mainWindow->SetIsFixedToScreen(!mainWindow->GetIsFixedToScreen());
                 }
             }
 
@@ -261,8 +220,10 @@ int main(int argv, char** args)
         UpdateCamera(camera, screenSize);
         camera.Update(deltaTime);
 
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SDL_RenderClear(renderer); // Clear render window each frame before populating again
+        //SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        //SDL_RenderClear(renderer); // Clear render window each frame before populating again
+
+        mainRenderer.Clear({ 255, 255, 255, 255 });
 
         if (!isPaused) // Only update physics when simulation isn't paused
         {
@@ -272,45 +233,44 @@ int main(int argv, char** args)
             body2.Update(deltaTime);
 
             // Keep bodyLabel under body render
-            bodyLabel->SetPosition(static_cast<int>(body1.position.x), static_cast<int>(body1.position.y + body1.radius) + 10);
+            //bodyLabel->SetPosition(static_cast<int>(body1.position.x), static_cast<int>(body1.position.y + body1.radius) + 10);
 
             // Testing sticking window to body
-            mainWindow->SetPosX(body1.position.x + 50);
-            mainWindow->SetPosY(body1.position.y - 20);
+           // mainWindow->SetPosX(body1.position.x + 50);
+            //mainWindow->SetPosY(body1.position.y - 20);
 
-            if (isMouseDown) // If mouse is clicked, apply force to body1 directly proportional to distance between the body and the mouse
-            {
-                double cursorDist = (cursorPos - body1.position).GetMagnitude();
-                SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-                DrawCircle(renderer, cursorPos.x, cursorPos.y, cursorDist * 0.2); // Display circle around cursor with a radius proportional to the distance between the cursor and the body
-                body1.ApplyForce((cursorPos - body1.position) * 25);
-            }
+            //if (isMouseDown) // If mouse is clicked, apply force to body1 directly proportional to distance between the body and the mouse
+            //{
+            //    double cursorDist = (cursorPos - body1.position).GetMagnitude();
+            //    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+            //    DrawCircle(renderer, cursorPos.x, cursorPos.y, cursorDist * 0.2); // Display circle around cursor with a radius proportional to the distance between the cursor and the body
+            //    body1.ApplyForce((cursorPos - body1.position) * 25);
+            //}
         }
 
-        if (isPaused)
+        /*if (isPaused)
         {
             pausedLabel->Draw(renderer, camera, screenSize);
-        }
+        }*/
 
-        body2.Draw(renderer, camera, screenSize);
-        body1.Draw(renderer, camera, screenSize);
+        body2.Draw(mainRenderer);
+        body1.Draw(mainRenderer);
 
         //bodyText.Draw(camera, screenSize);
-        bodyLabel->Draw(renderer, camera, screenSize);
+        //bodyLabel->Draw(renderer, camera, screenSize);
 
         // Draw UI on top of scene
-        mainWindow->Draw(renderer, camera, screenSize);
+        //mainWindow->Draw(renderer, camera, screenSize);
 
         // Draw cursor
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        DrawCircle(renderer, cursorPos.x, cursorPos.y, 6);
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        DrawCircle(renderer, cursorPos.x, cursorPos.y, 5);
+        mainRenderer.DrawCircleOnScreen(cursorPos, 6, { 255, 255, 255, 255 });
+        mainRenderer.DrawCircleOnScreen(cursorPos, 5, { 0, 0, 0, 255 });
 
-        SDL_RenderPresent(renderer);
+        //SDL_RenderPresent(renderer);
+        mainRenderer.Present();
     }
 
-    SDL_DestroyRenderer(renderer);
+    //SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 
     TTF_CloseFont(pausedFont);
