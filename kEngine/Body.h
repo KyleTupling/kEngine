@@ -52,7 +52,7 @@ public:
      *
      * @param renderer The renderer to use to draw the body.
      */
-    void Draw(Renderer& renderer) const;
+    void Draw(const Renderer& renderer) const;
 
     /**
      * Checks whether given mouse coordinates are inside body.
@@ -61,7 +61,7 @@ public:
      * @param camera The camera currently used for rendering.
      * @param screenSize The size of the screen.
      */
-    void CheckHover(const Vector2D& mousePos, const Camera& camera, const Vector2D& screenSize);
+    void CheckHover(const Vector2D& mousePos, const Renderer& renderer);
 
     bool GetActive() const;
     void SetActive(bool isActive);

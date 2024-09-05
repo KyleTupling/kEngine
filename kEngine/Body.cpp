@@ -53,7 +53,7 @@ void Body::Update(double deltaTime)
     UpdateKinematics(deltaTime);
 }
 
-void Body::Draw(Renderer& renderer) const
+void Body::Draw(const Renderer& renderer) const
 {
     // Check whether to draw previous positions
     if (m_ShouldDrawPosHistory)
@@ -71,12 +71,9 @@ void Body::Draw(Renderer& renderer) const
     renderer.DrawRectInWorld(m_Position, m_Radius * 2, m_Radius * 2, drawColor);
 }
 
-void Body::CheckHover(const Vector2D& mousePos, const Camera& camera, const Vector2D& screenSize)
+void Body::CheckHover(const Vector2D& mousePos, const Renderer& renderer)
 {
-    Vector2D screenPos = camera.ConvertWorldToScreen(m_Position, screenSize);
-
-    double distSqr = (mousePos - screenPos).GetMagnitudeSqr();
-    m_IsHovered = distSqr <= (m_Radius * m_Radius * camera.zoom * camera.zoom);
+    m_IsHovered = renderer.IsPointInWorldRect(mousePos, m_Position, m_Radius * 2, m_Radius * 2);
 }
 
 bool Body::GetActive() const
