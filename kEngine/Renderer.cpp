@@ -125,5 +125,5 @@ bool Renderer::IsPointInWorldRect(const Vector2D& point, const Vector2D& rectPos
 
 bool Renderer::IsPointInScreenRect(const Vector2D& point, const Vector2D& rectPos, int rectWidth, int rectHeight) const
 {
-	return point.x >= rectPos.x && point.x <= rectPos.x + rectWidth && point.y >= rectPos.y && point.y <= rectPos.y + rectHeight;
+	return point.x >= rectPos.x - rectWidth / 2 && point.x <= rectPos.x + rectWidth / 2 && point.y >= rectPos.y - rectHeight / 2 && point.y <= rectPos.y + rectHeight / 2;
 }
