@@ -9,10 +9,10 @@ UIWindow::UIWindow(const Renderer& renderer, const Vector2D& position, int width
 	m_Position = position;
 
 	// Does this need to be a unique pointer?
-	windowTitleLabel = std::make_unique<UILabel>(renderer, Vector2D(m_Position.x + width / 2, m_Position.y + 5), title, font, colorWhite, colorBlack);
+	windowTitleLabel = std::make_unique<UILabel>(renderer, Vector2D(m_Position.x, m_Position.y - height / 2 + 15), title, font, colorWhite, colorBlack);
 	
 	// Create close button
-	windowCloseButton = std::make_unique<UIButton>(renderer, Vector2D(m_Position.x + width - 30, m_Position.y), 30, 30, "X", font, colorBlack);
+	windowCloseButton = std::make_unique<UIButton>(renderer, m_Position + Vector2D(width / 2 - 15, 15 - height / 2), 30, 30, "X", font, colorBlack);
 	windowCloseButton->SetOnClick([this]() 
 		{
 			this->Close(); 
@@ -34,7 +34,7 @@ void UIWindow::Draw(const Renderer& renderer)
 
 			if (drawTitle) // Draw window titlebar
 			{
-				renderer.DrawRectOnScreen(m_Position, width, 30, { 50, 50, 50, 255 });
+				renderer.DrawRectOnScreen(windowTitleLabel->GetPosition(), width, 30, {50, 50, 50, 255});
 				windowTitleLabel->Draw(renderer);
 			}
 		}
@@ -96,8 +96,8 @@ void UIWindow::CheckHover(const Vector2D& mousePos, const Renderer& renderer)
 	}
 }
 
-
 // Getters
+
 int UIWindow::GetWidth() const
 {
 	return width;
