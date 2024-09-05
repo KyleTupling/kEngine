@@ -9,14 +9,14 @@ UIButton::UIButton(const Renderer& renderer, const Vector2D& position, int w, in
 	width = w;
 	height = h;
 
-	label = std::make_unique<UILabel>(renderer, Vector2D(position.x + w / 2, position.y + h / 2 - 10), text, font, colorWhite);
+	label = std::make_unique<UILabel>(renderer, m_Position, text, font, colorWhite);
 }
 
 void UIButton::Draw(const Renderer& renderer)
 {
 	label->SetIsFixedToScreen(m_IsFixedToScreen);
 
-	SDL_Color drawColor = isHovered ? color : hoveredColor;
+	SDL_Color drawColor = isHovered ? hoveredColor : color;
 	
 	if (m_IsFixedToScreen)
 	{
