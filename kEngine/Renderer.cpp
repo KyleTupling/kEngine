@@ -92,8 +92,8 @@ void Renderer::DrawTextureInWorld(SDL_Texture* texture, const Vector2D& worldPos
 	Vector2D screenPos = m_Camera->ConvertWorldToScreen(worldPos, m_ScreenSize);
 
 	SDL_Rect rect = {
-		static_cast<int>(screenPos.x - (width / 2) * m_Camera->zoom),
-		static_cast<int>(screenPos.y - (height / 2) * m_Camera->zoom),
+		static_cast<int>((screenPos.x - width / 2) * m_Camera->zoom),
+		static_cast<int>((screenPos.y - height / 2) * m_Camera->zoom),
 		static_cast<int>(width * m_Camera->zoom),
 		static_cast<int>(height * m_Camera->zoom)
 	};
