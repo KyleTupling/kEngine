@@ -120,7 +120,7 @@ SDL_Texture* Renderer::CreateTexture(SDL_Surface* surface) const
 bool Renderer::IsPointInWorldRect(const Vector2D& point, const Vector2D& rectPos, int rectWidth, int rectHeight) const
 {
 	Vector2D rectScreenPos = m_Camera->ConvertWorldToScreen(rectPos, m_ScreenSize);
-	return point.x >= rectScreenPos.x && point.x <= rectScreenPos.x + rectWidth * m_Camera->zoom && point.y >= rectScreenPos.y && point.y <= rectScreenPos.y + rectHeight * m_Camera->zoom;
+	return point.x >= (rectScreenPos.x - rectWidth / 2) * m_Camera->zoom && point.x <= (rectScreenPos.x + rectWidth / 2) * m_Camera->zoom && point.y >= (rectScreenPos.y - rectHeight / 2) * m_Camera->zoom && point.y <= (rectScreenPos.y + rectHeight / 2) * m_Camera->zoom;
 }
 
 bool Renderer::IsPointInScreenRect(const Vector2D& point, const Vector2D& rectPos, int rectWidth, int rectHeight) const
