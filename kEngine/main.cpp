@@ -116,17 +116,19 @@ int main(int argv, char** args)
     auto pausedLabel = std::make_unique<UILabel>(mainRenderer, Vector2D(1280 - 100, 50), "PAUSED", pausedFont, colorWhite, colorBlack);
     pausedLabel->SetDrawBackground(true);
     pausedLabel->SetTextColor({ 255, 0, 0, 255 });
-    //auto bodyLabel = std::make_unique<UILabel>(renderer, static_cast<int>(body1.position.x), static_cast<int>(body1.position.y + body1.radius) + 10, "Planet", bodyFont, colorBlack, colorWhite);
-    //bodyLabel->SetIsFixedToScreen(false);
 
-    //auto mainWindow = std::make_unique<UIWindow>(renderer, body1.position.x + 50, body1.position.y - 20, 400, 200, "Planet", bodyFont);
-    //mainWindow->SetIsFixedToScreen(false);
-    //auto windowButton = std::make_unique<UIButton>(renderer, mainWindow->GetPosX(), mainWindow->GetPosY() + mainWindow->GetHeight() - 40, mainWindow->GetWidth(), 40, "Change Body Color", bodyFont, colorGrey);
-    //windowButton->SetOnClick([&body1]()
-    //    {
-    //        body1.color.r = 100;
-    //    });
-    //mainWindow->AddUIElement(std::move(windowButton));
+    auto bodyLabel = std::make_unique<UILabel>(mainRenderer, body1.GetPosition() + Vector2D(0, body1.GetRadius() + 10), "Planet", bodyFont, colorBlack, colorWhite);
+    bodyLabel->SetIsFixedToScreen(false);
+
+    auto mainWindow = std::make_unique<UIWindow>(mainRenderer, Vector2D(600, 600), 400, 200, "Planet", bodyFont);
+    mainWindow->SetIsFixedToScreen(true);
+    auto windowButton = std::make_unique<UIButton>(mainRenderer, mainWindow->GetPosition() - Vector2D(0, 40), mainWindow->GetWidth() - 20, 40, "Change Body Color", bodyFont, colorGrey);
+    windowButton->SetOnClick([&body1]()
+        {
+            body1.SetColor({ 30, 100, 30, 255 });
+        });
+    mainWindow->AddUIElement(std::move(windowButton));
+
     //auto windowLabel = std::make_unique<UILabel>(renderer, 180, 550, "(" + to_string(std::round(body1.position.x)) + ", " + to_string(std::round(body1.position.y)) + ")", bodyFont, colorWhite);
     //// Temporary: Store raw pointer to label to access within lambda function
     //auto* labelPtr = windowLabel.get();
@@ -165,14 +167,14 @@ int main(int argv, char** args)
                 isPaused = true;
             }
 
-            //mainWindow->HandleEvent(event);
+            mainWindow->HandleEvent(event);
 
             if (event.type == SDL_MOUSEMOTION)
             {
                 // Store current mouse position on mouse move
                 cursorPos.Set(event.motion.x, event.motion.y);
-                //mainWindow->CheckHover(cursorPos, camera, screenSize);
-                body1.CheckHover(cursorPos, camera, screenSize);
+                mainWindow->CheckHover(cursorPos, mainRenderer);
+                body1.CheckHover(cursorPos, mainRenderer);
             }
 
             if (event.type == SDL_MOUSEBUTTONDOWN)
@@ -233,7 +235,7 @@ int main(int argv, char** args)
             body2.Update(deltaTime);
 
             // Keep bodyLabel under body render
-            //bodyLabel->SetPosition(static_cast<int>(body1.position.x), static_cast<int>(body1.position.y + body1.radius) + 10);
+            bodyLabel->SetPosition(body1.GetPosition() + Vector2D(0, body1.GetRadius() + 10));
 
             // Testing sticking window to body
            // mainWindow->SetPosX(body1.position.x + 50);
@@ -257,10 +259,10 @@ int main(int argv, char** args)
         body1.Draw(mainRenderer);
 
         //bodyText.Draw(camera, screenSize);
-        //bodyLabel->Draw(renderer, camera, screenSize);
+        bodyLabel->Draw(mainRenderer);
 
         // Draw UI on top of scene
-        //mainWindow->Draw(renderer, camera, screenSize);
+        mainWindow->Draw(mainRenderer);
 
         // Draw cursor
         mainRenderer.DrawCircleOnScreen(cursorPos, 6, { 255, 255, 255, 255 });
