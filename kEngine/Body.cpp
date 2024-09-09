@@ -62,7 +62,7 @@ void Body::Draw(const Renderer& renderer) const
         {
             constexpr int PREVPOS_RECT_SIZE = 2;
             constexpr int PREVPOS_RECT_OFFSET = 1;
-            renderer.DrawRectInWorld(prevPos, PREVPOS_RECT_SIZE, PREVPOS_RECT_SIZE, { 0, 0, 0, 100 });
+            renderer.DrawRectInWorld(prevPos, PREVPOS_RECT_SIZE, PREVPOS_RECT_SIZE, { 50, 50, 50, 100 });
         }
     }
 
