@@ -16,12 +16,15 @@ public:
 	virtual const Vector2D& GetPosition() const { return m_Position; };
 	virtual void SetPosition(const Vector2D& position) { m_Position = position; };
 
+	bool GetIsVisible() const { return m_IsVisible; }
 	bool GetIsFixedToScreen() const { return m_IsFixedToScreen; }
 
+	void SetIsVisible(bool isVisible) { m_IsVisible = isVisible; }
 	virtual void SetIsFixedToScreen(bool isFixed) { m_IsFixedToScreen = isFixed; }
 
 protected:
 	Vector2D m_Position;
+	bool m_IsVisible = true;
 	bool m_IsFixedToScreen = true; // Whether UIElement position is fixed on screen
 };
 
