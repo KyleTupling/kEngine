@@ -131,6 +131,8 @@ void UIWindow::SetPosition(const Vector2D& position)
 	{
 		element->SetPosition(element->GetPosition() + difference);
 	}
+	
+	m_Position = position;
 }
 
 void UIWindow::SetWidth(int w)

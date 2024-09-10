@@ -72,4 +72,5 @@ void UIButton::SetPosition(const Vector2D& position)
 	// Translate child elements
 	Vector2D difference = position - m_Position;
 	label->SetPosition(label->GetPosition() + difference);
+	m_Position = position;
 }
