@@ -24,7 +24,7 @@ public:
 };
 ```
 
-Creating and running the application, as seen in [main.cpp](https://github.com/KyleTupling/kEngine/blob/master/kEngine/main.cpp) can be done as follows:
+Creating and running the application, as seen in [main.cpp](https://github.com/KyleTupling/kEngine/blob/master/kEngine/main.cpp), can be done as follows:
 
 ```cpp
 #include "TestApplication.h"
