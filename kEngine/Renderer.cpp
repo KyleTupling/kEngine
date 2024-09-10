@@ -34,8 +34,8 @@ void Renderer::DrawRectInWorld(const Vector2D& worldPos, int width, int height, 
 	Vector2D screenPos = m_Camera->ConvertWorldToScreen(worldPos, m_ScreenSize);
 
 	SDL_Rect rect = {
-		static_cast<int>((screenPos.x - width / 2) * m_Camera->zoom),
-		static_cast<int>((screenPos.y - height / 2) * m_Camera->zoom),
+		static_cast<int>(screenPos.x - (width / 2) * m_Camera->zoom),
+		static_cast<int>(screenPos.y - (height / 2) * m_Camera->zoom),
 		static_cast<int>(width * m_Camera->zoom),
 		static_cast<int>(height * m_Camera->zoom)
 	};
@@ -92,8 +92,8 @@ void Renderer::DrawTextureInWorld(SDL_Texture* texture, const Vector2D& worldPos
 	Vector2D screenPos = m_Camera->ConvertWorldToScreen(worldPos, m_ScreenSize);
 
 	SDL_Rect rect = {
-		static_cast<int>((screenPos.x - width / 2) * m_Camera->zoom),
-		static_cast<int>((screenPos.y - height / 2) * m_Camera->zoom),
+		static_cast<int>(screenPos.x - (width / 2) * m_Camera->zoom),
+		static_cast<int>(screenPos.y - (height / 2) * m_Camera->zoom),
 		static_cast<int>(width * m_Camera->zoom),
 		static_cast<int>(height * m_Camera->zoom)
 	};
@@ -120,7 +120,7 @@ SDL_Texture* Renderer::CreateTexture(SDL_Surface* surface) const
 bool Renderer::IsPointInWorldRect(const Vector2D& point, const Vector2D& rectPos, int rectWidth, int rectHeight) const
 {
 	Vector2D rectScreenPos = m_Camera->ConvertWorldToScreen(rectPos, m_ScreenSize);
-	return point.x >= (rectScreenPos.x - rectWidth / 2) * m_Camera->zoom && point.x <= (rectScreenPos.x + rectWidth / 2) * m_Camera->zoom && point.y >= (rectScreenPos.y - rectHeight / 2) * m_Camera->zoom && point.y <= (rectScreenPos.y + rectHeight / 2) * m_Camera->zoom;
+	return point.x >= rectScreenPos.x - (rectWidth / 2) * m_Camera->zoom && point.x <= rectScreenPos.x + (rectWidth / 2) * m_Camera->zoom && point.y >= rectScreenPos.y - (rectHeight / 2) * m_Camera->zoom && point.y <= rectScreenPos.y + (rectHeight / 2) * m_Camera->zoom;
 }
 
 bool Renderer::IsPointInScreenRect(const Vector2D& point, const Vector2D& rectPos, int rectWidth, int rectHeight) const
