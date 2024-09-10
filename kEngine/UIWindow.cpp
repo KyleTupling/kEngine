@@ -44,7 +44,7 @@ void UIWindow::Draw(const Renderer& renderer)
 
 			if (drawTitle) // Draw window titlebar
 			{
-				renderer.DrawRectInWorld(m_Position - Vector2D(0, (height / 2) - 15), width, 30, {50, 50, 50, 255});
+				renderer.DrawRectInWorld(windowTitleLabel->GetPosition(), width, 30, {50, 50, 50, 255});
 				windowTitleLabel->Draw(renderer);
 			}
 		}
