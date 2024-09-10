@@ -34,9 +34,8 @@ void UIButton::HandleEvent(const SDL_Event& event)
 {
 	if (event.type == SDL_MOUSEMOTION)
 	{
-		int mouseX, mouseY;
-		SDL_GetMouseState(&mouseX, &mouseY);
-
+		//int mouseX, mouseY;
+		//SDL_GetMouseState(&mouseX, &mouseY);
 		//isHovered = mouseX >= rect.x && mouseX <= rect.x + rect.w && mouseY >= rect.y && mouseY <= rect.y + rect.h;
 	}
 	if (event.type == SDL_MOUSEBUTTONDOWN)
