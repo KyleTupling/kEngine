@@ -28,11 +28,13 @@ public:
 
 	int GetWidth() const;
 	int GetHeight() const;
+	const SDL_Color& GetBackgroundColor() const;
 	bool GetIsDisplayed() const;
 
 	void SetPosition(const Vector2D& position);
 	void SetWidth(int w);
 	void SetHeight(int h);
+	void SetBackgroundColor(const SDL_Color& color);
 	void SetIsDisplayed(bool isDisplayed);
 	void SetIsFixedToScreen(bool isFixed) override;
 
@@ -41,6 +43,8 @@ public:
 private:
 	int width;
 	int height;
+
+	SDL_Color m_BackgroundColor = { 0, 0, 0, 255 };
 
 	std::unique_ptr<UILabel> windowTitleLabel; // Does this need to be a unique pointer?
 	bool drawTitle = true;
