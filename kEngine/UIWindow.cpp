@@ -30,7 +30,7 @@ void UIWindow::Draw(const Renderer& renderer)
 	{
 		if (m_IsFixedToScreen)
 		{
-			renderer.DrawRectOnScreen(m_Position, width, height, { 0, 0, 0, 255 });
+			renderer.DrawRectOnScreen(m_Position, width, height, m_BackgroundColor);
 
 			if (drawTitle) // Draw window titlebar
 			{
@@ -40,11 +40,11 @@ void UIWindow::Draw(const Renderer& renderer)
 		}
 		else
 		{
-			renderer.DrawRectInWorld(m_Position, width, height, { 0, 0, 0, 255 });
+			renderer.DrawRectInWorld(m_Position, width, height, m_BackgroundColor);
 
 			if (drawTitle) // Draw window titlebar
 			{
-				renderer.DrawRectInWorld(m_Position, width, 30, { 50, 50, 50, 255 });
+				renderer.DrawRectInWorld(m_Position - Vector2D(0, (height / 2) - 15), width, 30, {50, 50, 50, 255});
 				windowTitleLabel->Draw(renderer);
 			}
 		}
@@ -108,6 +108,11 @@ int UIWindow::GetHeight() const
 	return height;
 }
 
+const SDL_Color& UIWindow::GetBackgroundColor() const
+{
+	return m_BackgroundColor;
+}
+
 bool UIWindow::GetIsDisplayed() const
 {
 	return isDisplayed;
@@ -138,6 +143,11 @@ void UIWindow::SetWidth(int w)
 void UIWindow::SetHeight(int h)
 {
 	height = h;
+}
+
+void UIWindow::SetBackgroundColor(const SDL_Color& color)
+{
+	m_BackgroundColor = color;
 }
 
 void UIWindow::SetIsDisplayed(bool isDisplayed)
