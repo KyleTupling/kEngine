@@ -16,7 +16,7 @@ void UIButton::Draw(const Renderer& renderer)
 {
 	label->SetIsFixedToScreen(m_IsFixedToScreen);
 
-	SDL_Color drawColor = isHovered ? hoveredColor : color;
+	SDL_Color drawColor = isHovered ? m_HoveredColor : color;
 	
 	if (m_IsFixedToScreen)
 	{
@@ -73,4 +73,9 @@ void UIButton::SetPosition(const Vector2D& position)
 	Vector2D difference = position - m_Position;
 	label->SetPosition(label->GetPosition() + difference);
 	m_Position = position;
+}
+
+void UIButton::SetHoveredColor(SDL_Color color)
+{
+	m_HoveredColor = color;
 }

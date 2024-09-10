@@ -22,12 +22,13 @@ public:
 	void CheckHover(const Vector2D& mousePos, const Renderer& renderer) override;
 	
 	void SetPosition(const Vector2D& position) override;
+	void SetHoveredColor(SDL_Color color);
 
 private:
 	int width;
 	int height;
 	SDL_Color color; 
-	SDL_Color hoveredColor = { 100, 100, 200, 255 };
+	SDL_Color m_HoveredColor = { 200, 70, 160, 255 };
 	std::unique_ptr<UILabel> label;
 	TTF_Font* font;
 	bool isHovered = false;
