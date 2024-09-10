@@ -1,5 +1,6 @@
 #include "TestApplication.h"
 #include "UILabel.h"
+#include "UIWindow.h"
 
 TestApplication::TestApplication(const ApplicationConfig& config)
 	: Application(config)
@@ -8,19 +9,39 @@ TestApplication::TestApplication(const ApplicationConfig& config)
 	starBody->SetMass(1e18);
 	starBody->SetRadius(15);
 	starBody->SetColor({ 230, 180, 30, 255 });
+	starBody->SetHoveredColor({ 250, 210, 50, 255 });
 	m_Bodies.push_back(std::move(starBody));
 
 	auto planetBody = std::make_unique<Body>(Vector2D(400, 200), Vector2D(400, 0));
 	planetBody->SetMass(10);
 	planetBody->SetColor({ 30, 30, 210, 255 });
+	planetBody->SetHoveredColor({ 60, 60, 240, 255 });
 	planetBody->SetShouldDrawPosHistory(true);
 	m_Bodies.push_back(std::move(planetBody));
 
-	TTF_Font* pausedFont = GetResourceManager().LoadFont("C:/Users/PC/Desktop/cpp/ARIAL.TTF", 20);
+	TTF_Font* pausedFont = GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20);
 	SDL_Color white = { 255, 255, 255, 255 };
+	SDL_Color offBlack = { 20, 20, 20, 255 };
 	AddUIElement("pausedLabel", std::make_unique<UILabel>(*m_Renderer, Vector2D(1280 - 100, 50), "PAUSED", pausedFont, white));
-	
 	GetUIElement("pausedLabel")->SetIsVisible(false);
+
+	AddUIElement("bodyWindow", std::make_unique<UIWindow>(*m_Renderer, Vector2D(100, 100), 200, 100, "Body", pausedFont));
+	// TODO: To make this safer, implement enum class UIELementType into UIElement?
+	UIWindow* bodyWindow = dynamic_cast<UIWindow*>(GetUIElement("bodyWindow"));
+	bodyWindow->SetBackgroundColor({ 40, 40, 40, 100 });
+	bodyWindow->SetIsFixedToScreen(false);
+
+	auto pinButton = std::make_unique<UIButton>(*m_Renderer, bodyWindow->GetPosition() - Vector2D(bodyWindow->GetWidth() / 2 - 15, bodyWindow->GetHeight() / 2 - 15), 30, 30, "P", pausedFont, offBlack);
+	// Add button to toggle whether window is fixed to screen
+	pinButton->SetOnClick([this]()
+		{
+			UIWindow* window = dynamic_cast<UIWindow*>(GetUIElement("bodyWindow"));
+			if (window)
+			{
+				window->SetIsFixedToScreen(!window->GetIsFixedToScreen());
+			}
+		});
+	bodyWindow->AddUIElement(std::move(pinButton));
 }
 
 TestApplication::~TestApplication()
@@ -48,10 +69,39 @@ void TestApplication::HandleEvents()
 			}
 		}
 
+		if (event.type == SDL_MOUSEMOTION)
+		{
+			int mouseX, mouseY;
+			SDL_GetMouseState(&mouseX, &mouseY);
+
+			// Check hover state of all visible UIElements
+			for (const auto& pair : m_UIElements)
+			{
+				if (pair.second->GetIsVisible())
+				{
+					pair.second->CheckHover(Vector2D(mouseX, mouseY), *m_Renderer);
+				}
+			}
+
+			for (auto& body : m_Bodies)
+			{
+				body->CheckHover(Vector2D(mouseX, mouseY), *m_Renderer);
+			}
+		}
+
 		if (event.type == SDL_MOUSEWHEEL)
 		{
 			if (event.wheel.y > 0 && m_Camera.targetZoom < m_Camera.maxZoom) m_Camera.targetZoom += event.wheel.y * 0.5;
 			else if (event.wheel.y < 0 && m_Camera.targetZoom > m_Camera.minZoom) m_Camera.targetZoom += event.wheel.y * 0.5;
+		}
+
+		// Handle event for all visible UIElements
+		for (const auto& pair : m_UIElements)
+		{
+			if (pair.second->GetIsVisible())
+			{
+				pair.second->HandleEvent(event);
+			}
 		}
 	}
 }
@@ -84,6 +134,13 @@ void TestApplication::Update(double deltaTime)
 
 	m_Camera.Update(deltaTime);
 	UpdateBodies(deltaTime);
+
+	UIWindow* bodyWindow = dynamic_cast<UIWindow*>(GetUIElement("bodyWindow"));
+	if (!bodyWindow->GetIsFixedToScreen())
+	{
+		bodyWindow->SetPosition(m_Bodies[1]->GetPosition() + Vector2D(120, 0));
+	}
+	
 }
 
 void TestApplication::Render()
