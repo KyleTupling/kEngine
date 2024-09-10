@@ -58,10 +58,10 @@ void Body::Draw(const Renderer& renderer) const
     // Check whether to draw previous positions
     if (m_ShouldDrawPosHistory)
     {
+        constexpr int PREVPOS_RECT_SIZE = 2;
+        constexpr int PREVPOS_RECT_OFFSET = 1;
         for (const auto& prevPos : m_PositionHistory)
         {
-            constexpr int PREVPOS_RECT_SIZE = 2;
-            constexpr int PREVPOS_RECT_OFFSET = 1;
             renderer.DrawRectInWorld(prevPos, PREVPOS_RECT_SIZE, PREVPOS_RECT_SIZE, { 50, 50, 50, 100 });
         }
     }
