@@ -4,7 +4,7 @@
 
 ## Graphics
 #### Renderer
-- [ ] Create RendererContext class/namepsace to manage rendering and prevent multiple other classes needing to store instance reference.
+- [x] Create RendererContext class/namepsace to manage rendering and prevent multiple other classes needing to store instance reference.
 
 #### Text
 - [x] Implement text rendering using [`SDL_ttf`](https://www.libsdl.org/projects/SDL_ttf/) library.
@@ -13,7 +13,7 @@
 - [x] Implement primitive UI classes (Window, Button, Label, etc.)
 - [ ] Have UIElement give default constructor, getters and setters?
 - [ ] Create UIManager to handle UI updating, rendering
-- [ ] Phase out Text class to be replaced by UILabel
+- [x] Phase out Text class to be replaced by UILabel
 - [ ] Prevent click on UI event also calling on simulation layer
 - [ ] ***BUG*** When UIWindow close button is used and the window is then redisplayed, the close button retains hover state (only visual)
 
