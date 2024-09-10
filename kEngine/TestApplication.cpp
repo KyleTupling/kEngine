@@ -5,6 +5,7 @@
 TestApplication::TestApplication(const ApplicationConfig& config)
 	: Application(config)
 {
+	// Create star body
 	auto starBody = std::make_unique<Body>(Vector2D(m_Config.ScreenSize.x / 2, m_Config.ScreenSize.y / 2), Vector2D(0, 0));
 	starBody->SetMass(1e18);
 	starBody->SetRadius(15);
@@ -12,6 +13,7 @@ TestApplication::TestApplication(const ApplicationConfig& config)
 	starBody->SetHoveredColor({ 250, 210, 50, 255 });
 	m_Bodies.push_back(std::move(starBody));
 
+	// Create planet body
 	auto planetBody = std::make_unique<Body>(Vector2D(400, 200), Vector2D(400, 0));
 	planetBody->SetMass(10);
 	planetBody->SetColor({ 30, 30, 210, 255 });
@@ -19,20 +21,26 @@ TestApplication::TestApplication(const ApplicationConfig& config)
 	planetBody->SetShouldDrawPosHistory(true);
 	m_Bodies.push_back(std::move(planetBody));
 
+	// Load font
 	TTF_Font* pausedFont = GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20);
+
+	// TEMPORARY: Cache colors
 	SDL_Color white = { 255, 255, 255, 255 };
 	SDL_Color offBlack = { 20, 20, 20, 255 };
+
+	// Add paused label
 	AddUIElement("pausedLabel", std::make_unique<UILabel>(*m_Renderer, Vector2D(1280 - 100, 50), "PAUSED", pausedFont, white));
 	GetUIElement("pausedLabel")->SetIsVisible(false);
 
+	// Create window attached to planet body
 	AddUIElement("bodyWindow", std::make_unique<UIWindow>(*m_Renderer, Vector2D(100, 100), 200, 100, "Body", pausedFont));
 	// TODO: To make this safer, implement enum class UIELementType into UIElement?
 	UIWindow* bodyWindow = dynamic_cast<UIWindow*>(GetUIElement("bodyWindow"));
 	bodyWindow->SetBackgroundColor({ 40, 40, 40, 100 });
 	bodyWindow->SetIsFixedToScreen(false);
 
-	auto pinButton = std::make_unique<UIButton>(*m_Renderer, bodyWindow->GetPosition() - Vector2D(bodyWindow->GetWidth() / 2 - 15, bodyWindow->GetHeight() / 2 - 15), 30, 30, "P", pausedFont, offBlack);
 	// Add button to toggle whether window is fixed to screen
+	auto pinButton = std::make_unique<UIButton>(*m_Renderer, bodyWindow->GetPosition() - Vector2D(bodyWindow->GetWidth() / 2 - 15, bodyWindow->GetHeight() / 2 - 15), 30, 30, "P", pausedFont, offBlack);
 	pinButton->SetOnClick([this]()
 		{
 			UIWindow* window = dynamic_cast<UIWindow*>(GetUIElement("bodyWindow"));
@@ -62,6 +70,7 @@ void TestApplication::HandleEvents()
 
 		if (event.type == SDL_KEYDOWN)
 		{
+			// Pause - still render but don't update
 			if (event.key.keysym.sym == SDLK_SPACE)
 			{
 				m_IsPaused = !m_IsPaused;
@@ -71,6 +80,7 @@ void TestApplication::HandleEvents()
 
 		if (event.type == SDL_MOUSEMOTION)
 		{
+			// Get mouse position
 			int mouseX, mouseY;
 			SDL_GetMouseState(&mouseX, &mouseY);
 
@@ -83,6 +93,7 @@ void TestApplication::HandleEvents()
 				}
 			}
 
+			// Check hover state of all bodies
 			for (auto& body : m_Bodies)
 			{
 				body->CheckHover(Vector2D(mouseX, mouseY), *m_Renderer);
@@ -91,6 +102,7 @@ void TestApplication::HandleEvents()
 
 		if (event.type == SDL_MOUSEWHEEL)
 		{
+			// Zoom camera
 			if (event.wheel.y > 0 && m_Camera.targetZoom < m_Camera.maxZoom) m_Camera.targetZoom += event.wheel.y * 0.5;
 			else if (event.wheel.y < 0 && m_Camera.targetZoom > m_Camera.minZoom) m_Camera.targetZoom += event.wheel.y * 0.5;
 		}
@@ -126,21 +138,25 @@ void TestApplication::Update(double deltaTime)
 	{
 		m_Camera.position.x += m_Camera.moveSpeed / m_Camera.zoom;
 	}
-	// Reset position and zoom
+
+	// Reset camera position and zoom
 	if (keyboardState[SDL_SCANCODE_X])
 	{
 		m_Camera.Reset(m_Config.ScreenSize);
 	}
 
+	// Call camera update for target zoom lerp
 	m_Camera.Update(deltaTime);
+
+	// Update all bodies
 	UpdateBodies(deltaTime);
 
+	// Update bodyWindow position to stick to planetBody (if bodyWindow isn't fixed to screen)
 	UIWindow* bodyWindow = dynamic_cast<UIWindow*>(GetUIElement("bodyWindow"));
 	if (!bodyWindow->GetIsFixedToScreen())
 	{
 		bodyWindow->SetPosition(m_Bodies[1]->GetPosition() + Vector2D(120, 0));
 	}
-	
 }
 
 void TestApplication::Render()
