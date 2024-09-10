@@ -13,6 +13,7 @@ UIWindow::UIWindow(const Renderer& renderer, const Vector2D& position, int width
 	
 	// Create close button
 	windowCloseButton = std::make_unique<UIButton>(renderer, m_Position + Vector2D(width / 2 - 15, 15 - height / 2), 30, 30, "X", font, colorBlack);
+	windowCloseButton->SetHoveredColor({ 255, 0, 0, 255 });
 	windowCloseButton->SetOnClick([this]() 
 		{
 			this->Close(); 
