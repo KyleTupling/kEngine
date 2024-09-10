@@ -26,7 +26,7 @@ UIWindow::~UIWindow()
 
 void UIWindow::Draw(const Renderer& renderer)
 {
-	if (isDisplayed)
+	if (m_IsVisible)
 	{
 		if (m_IsFixedToScreen)
 		{
@@ -63,21 +63,24 @@ void UIWindow::Draw(const Renderer& renderer)
 
 void UIWindow::HandleEvent(const SDL_Event& event)
 {
-	if (isDisplayed) // Only handle window events if the window is being displayed
+	if (m_IsVisible) // Only handle window events if the window is being displayed
 	{
 		if (drawCloseButton) windowCloseButton->HandleEvent(event);
 
 		// Handle child element events
 		for (const auto& element : childrenElements)
 		{
-			element->HandleEvent(event);
+			if (element->GetIsVisible())
+			{
+				element->HandleEvent(event);
+			}
 		}
 	}
 }
 
 void UIWindow::Close()
 {
-	isDisplayed = false;
+	m_IsVisible = false;
 }
 
 void UIWindow::AddUIElement(std::unique_ptr<UIElement> element)
@@ -113,11 +116,6 @@ const SDL_Color& UIWindow::GetBackgroundColor() const
 	return m_BackgroundColor;
 }
 
-bool UIWindow::GetIsDisplayed() const
-{
-	return isDisplayed;
-}
-
 // Setters
 
 void UIWindow::SetPosition(const Vector2D& position)
@@ -148,11 +146,6 @@ void UIWindow::SetHeight(int h)
 void UIWindow::SetBackgroundColor(const SDL_Color& color)
 {
 	m_BackgroundColor = color;
-}
-
-void UIWindow::SetIsDisplayed(bool isDisplayed)
-{
-	this->isDisplayed = isDisplayed;
 }
 
 void UIWindow::SetIsFixedToScreen(bool isFixed)
