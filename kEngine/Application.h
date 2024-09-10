@@ -19,12 +19,31 @@ public:
 	Application(const ApplicationConfig& config);
 	virtual ~Application();
 
+	/**
+	Shuts down the ResourceManager and releases instance.
+	 */
 	static void Shutdown();
 
-	//virtual void Init();
+	/**
+	Starts running the application. This will happen until m_IsRunning is false.
+	 */
 	void Run();
+
+	/**
+	Handles events.
+	 */
 	virtual void HandleEvents();
+
+	/**
+	 * Use to update logic within the application.
+	 *
+	 * @param deltaTime The time in seconds since the last frame.
+	 */
 	virtual void Update(double deltaTime) = 0;
+
+	/**
+	Use for all rendering within application.
+	 */
 	virtual void Render() = 0;
 	
 	SDL_Window& GetWindow() const { return *m_Window; }
