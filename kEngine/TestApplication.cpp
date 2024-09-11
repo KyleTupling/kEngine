@@ -79,6 +79,11 @@ void TestApplication::HandleEvents()
 				m_IsPaused = !m_IsPaused;
 				GetUIElement("pausedLabel")->SetIsVisible(m_IsPaused);
 			}
+
+			if (event.key.keysym.sym == SDLK_e)
+			{
+				GetUIElement("sideWindow")->SetIsVisible(true);
+			}
 		}
 
 		if (event.type == SDL_MOUSEMOTION)
@@ -164,19 +169,27 @@ void TestApplication::Update(double deltaTime)
 
 void TestApplication::Render()
 {
+	RenderBodies();
+
 	RenderUIElements();
 	SDL_Color bodyTextColor = { 255, 255, 255, 255 };
-	// TEMPORARY display body information as just text
-	for (std::size_t i = 0; i < m_Bodies.size(); i++)
+
+	if (!GetUIElement("sideWindow")->GetIsVisible())
 	{
-		int drawRadius = MathFunctions::clamp(m_Bodies[i]->GetRadius(), 5, 30);
-
-		m_Renderer->DrawRectOnScreen(Vector2D(20, 50 + 100 * i), drawRadius * 2, drawRadius * 2, m_Bodies[i]->GetColor());
-		m_Renderer->DrawTextOnScreen(Vector2D(60, 50 + 100 * i), "Body", GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20), {255, 255, 255, 255}, true);
-		m_Renderer->DrawTextOnScreen(Vector2D(40, 50 + 100 * i + 20), "Mass: " + Utility::ToString(m_Bodies[i]->GetMass()), GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20), {255, 255, 255, 255}, false);
+		m_Renderer->DrawTextOnScreen(Vector2D(m_Config.ScreenSize.x / 2, m_Config.ScreenSize.y - 20), "Press 'E' to display details panel", GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20), { 255, 255, 255, 255 }, true);
 	}
+	else
+	{
+		// TEMPORARY display body information as just text
+		for (std::size_t i = 0; i < m_Bodies.size(); i++)
+		{
+			int drawRadius = MathFunctions::clamp(m_Bodies[i]->GetRadius(), 5, 30);
 
-	RenderBodies();
+			m_Renderer->DrawRectOnScreen(Vector2D(20, 50 + 100 * i), drawRadius * 2, drawRadius * 2, m_Bodies[i]->GetColor());
+			m_Renderer->DrawTextOnScreen(Vector2D(60, 50 + 100 * i), "Body", GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20), { 255, 255, 255, 255 }, true);
+			m_Renderer->DrawTextOnScreen(Vector2D(40, 50 + 100 * i + 20), "Mass: " + Utility::ToString(m_Bodies[i]->GetMass()), GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20), { 255, 255, 255, 255 }, false);
+		}
+	}
 }
 
 void TestApplication::AddBody(std::unique_ptr<Body> body)
