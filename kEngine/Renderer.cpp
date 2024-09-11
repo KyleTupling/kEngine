@@ -1,5 +1,7 @@
 #include "Renderer.h"
 
+#include <SDL_ttf.h>
+
 Renderer::Renderer(SDL_Window* window, const Vector2D& screenSize, Camera* camera)
 	: m_ScreenSize(screenSize), m_Camera(camera)
 {
@@ -115,6 +117,36 @@ void Renderer::DrawTextureOnScreen(SDL_Texture* texture, const Vector2D& screenP
 SDL_Texture* Renderer::CreateTexture(SDL_Surface* surface) const
 {
 	return SDL_CreateTextureFromSurface(m_Renderer, surface);
+}
+
+void Renderer::DrawTextOnScreen(const Vector2D& screenPos, const std::string& text, TTF_Font* font, const SDL_Color& color = {255, 255, 255, 255}, bool centered = true) const
+{
+	SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), color);
+	SDL_Texture* texture = CreateTexture(surface);
+	int w, h;
+	SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+	SDL_Rect textRect;
+	if (centered)
+	{
+		textRect = {
+			static_cast<int>(screenPos.x) - w / 2,
+			static_cast<int>(screenPos.y) - h / 2,
+			w,
+			h
+		};
+	}
+	else
+	{
+		textRect = {
+			static_cast<int>(screenPos.x),
+			static_cast<int>(screenPos.y),
+			w,
+			h
+		};
+	}
+	SDL_RenderCopy(m_Renderer, texture, NULL, &textRect);
+	SDL_FreeSurface(surface);
+	SDL_DestroyTexture(texture);
 }
 
 bool Renderer::IsPointInWorldRect(const Vector2D& point, const Vector2D& rectPos, int rectWidth, int rectHeight) const

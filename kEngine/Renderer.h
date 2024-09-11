@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include "Camera.h"
 #include "Vector2D.h"
 
@@ -88,6 +89,9 @@ public:
 	 * @return The SDL_Texture
 	 */
 	SDL_Texture* CreateTexture(SDL_Surface* surface) const;
+
+	// TEMPORARY
+	void DrawTextOnScreen(const Vector2D& screenPos, const std::string& text, TTF_Font* font, const SDL_Color& color, bool centered) const;
 
 	bool IsPointInWorldRect(const Vector2D& point, const Vector2D& rectPos, int rectWidth, int rectHeight) const;
 	bool IsPointInScreenRect(const Vector2D& point, const Vector2D& rectPos, int rectWidth, int rectHeight) const;
