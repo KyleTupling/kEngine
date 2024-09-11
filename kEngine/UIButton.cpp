@@ -3,7 +3,7 @@
 extern SDL_Color colorWhite;
 
 UIButton::UIButton(const Renderer& renderer, const Vector2D& position, int w, int h, const std::string& text, TTF_Font* font, SDL_Color color)
-	: m_Font(font), m_Color(color)
+	: m_Color(color)
 {
 	m_Position = position;
 	m_Width = w;
@@ -50,11 +50,6 @@ void UIButton::HandleEvent(const SDL_Event& event)
 	}
 }
 
-void UIButton::SetOnClick(std::function<void()> callback)
-{
-	OnClick = callback;
-}
-
 void UIButton::CheckHover(const Vector2D& mousePos, const Renderer& renderer)
 {
 	if (!m_IsFixedToScreen)
@@ -75,7 +70,66 @@ void UIButton::SetPosition(const Vector2D& position)
 	m_Position = position;
 }
 
-void UIButton::SetHoveredColor(SDL_Color color)
+void UIButton::SetOnClick(std::function<void()> callback)
+{
+	OnClick = callback;
+}
+
+const UILabel& UIButton::GetLabel() const
+{
+	if (!m_Label)
+	{
+		throw std::runtime_error("Label is not defined.");
+	}
+	return *m_Label;
+}
+
+void UIButton::SetText(const Renderer& renderer, const std::string& text)
+{
+	m_Label->SetText(renderer, text);
+}
+
+int UIButton::GetWidth() const
+{
+	return m_Width;
+}
+
+void UIButton::SetWidth(int width)
+{
+	m_Width = width;
+}
+
+int UIButton::GetHeight() const
+{
+	return m_Height;
+}
+
+void UIButton::SetHeight(int height)
+{
+	m_Height = height;
+}
+
+const SDL_Color& UIButton::GetColor() const
+{
+	return m_Color;
+}
+
+void UIButton::SetColor(const SDL_Color& color)
+{
+	m_Color = color;
+}
+
+const SDL_Color& UIButton::GetHoveredColor() const
+{
+	return m_HoveredColor;
+}
+
+void UIButton::SetHoveredColor(const SDL_Color& color)
 {
 	m_HoveredColor = color;
+}
+
+bool UIButton::GetIsHovered() const
+{
+	return m_IsHovered;
 }

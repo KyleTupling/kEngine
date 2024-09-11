@@ -16,21 +16,49 @@ public:
 	void Draw(const Renderer& renderer) override;
 	void HandleEvent(const SDL_Event& event) override;
 
-	// Set the function that runs if the button is clicked
+	void CheckHover(const Vector2D& mousePos, const Renderer& renderer) override;
+
+	// Overrides UIElement as needs to propogate position change to all children
+	void SetPosition(const Vector2D& position) override;
+
+	/**
+	 * Sets the function that runs when button is clicked.
+	 *
+	 * @param callback The callback function to run on click.
+	 * 
+	 * @note This currently seems to work best with lambda functions, due for a refactor.
+	 */
 	void SetOnClick(std::function<void()> callback);
 
-	void CheckHover(const Vector2D& mousePos, const Renderer& renderer) override;
-	
-	void SetPosition(const Vector2D& position) override;
-	void SetHoveredColor(SDL_Color color);
+	/**
+	 * Gets the UILabel object used to show text on the button.
+	 *
+	 * @return A read-only reference to the label.
+	 */
+	const UILabel& GetLabel() const;
+
+	void SetText(const Renderer& renderer, const std::string& text);
+
+	int GetWidth() const;
+	void SetWidth(int width);
+
+	int GetHeight() const;
+	void SetHeight(int height);
+
+	const SDL_Color& GetColor() const;
+	void SetColor(const SDL_Color& color);
+
+	const SDL_Color& GetHoveredColor() const;
+	void SetHoveredColor(const SDL_Color& color);
+
+	bool GetIsHovered() const;
 
 private:
 	int m_Width;
 	int m_Height;
-	SDL_Color m_Color; 
+	SDL_Color m_Color = { 0, 0, 0, 255 };
 	SDL_Color m_HoveredColor = { 200, 70, 160, 255 };
 	std::unique_ptr<UILabel> m_Label;
-	TTF_Font* m_Font;
 	bool m_IsHovered = false;
 
 	std::function<void()> OnClick; // Store click handle function
