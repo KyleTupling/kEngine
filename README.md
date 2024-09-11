@@ -4,7 +4,11 @@ C++ physics engine in early development. Currently testing planetary orbits.
 
 <!-- ![image](https://github.com/user-attachments/assets/604c4328-49fb-49e2-b01a-8125465c91d2) -->
 
+___
 ![image](https://github.com/user-attachments/assets/691e7db4-77f9-4689-96f0-a81afa03c084)
+---
+![image](https://github.com/user-attachments/assets/90e35cf8-10da-4fdc-a6ff-04694d681fc3)
+___
 
 ## Creating an application
 Specific engine applications can be made by inheriting from the [Application class](https://github.com/KyleTupling/kEngine/blob/master/kEngine/Application.h).
