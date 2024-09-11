@@ -77,7 +77,7 @@ void Application::HandleEvents()
 	}
 }
 
-const Vector2D& Application::GetScreenSize() const
+Vector2D Application::GetScreenSize() const
 {
 	int screenX, screenY;
 	SDL_GetWindowSize(m_Window, &screenX, &screenY);
