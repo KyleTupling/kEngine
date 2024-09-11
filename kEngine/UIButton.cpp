@@ -3,31 +3,31 @@
 extern SDL_Color colorWhite;
 
 UIButton::UIButton(const Renderer& renderer, const Vector2D& position, int w, int h, const std::string& text, TTF_Font* font, SDL_Color color)
-	: font(font), color(color)
+	: m_Font(font), m_Color(color)
 {
 	m_Position = position;
-	width = w;
-	height = h;
+	m_Width = w;
+	m_Height = h;
 
-	label = std::make_unique<UILabel>(renderer, m_Position, text, font, colorWhite);
+	m_Label = std::make_unique<UILabel>(renderer, m_Position, text, font, colorWhite);
 }
 
 void UIButton::Draw(const Renderer& renderer)
 {
-	label->SetIsFixedToScreen(m_IsFixedToScreen);
+	m_Label->SetIsFixedToScreen(m_IsFixedToScreen);
 
-	SDL_Color drawColor = isHovered ? m_HoveredColor : color;
+	SDL_Color drawColor = m_IsHovered ? m_HoveredColor : m_Color;
 	
 	if (m_IsFixedToScreen)
 	{
-		renderer.DrawRectOnScreen(m_Position, width, height, drawColor);
+		renderer.DrawRectOnScreen(m_Position, m_Width, m_Height, drawColor);
 	}
 	else
 	{
-		renderer.DrawRectInWorld(m_Position, width, height, drawColor);
+		renderer.DrawRectInWorld(m_Position, m_Width, m_Height, drawColor);
 	}
 	
-	label->Draw(renderer);
+	m_Label->Draw(renderer);
 }
 
 void UIButton::HandleEvent(const SDL_Event& event)
@@ -40,7 +40,7 @@ void UIButton::HandleEvent(const SDL_Event& event)
 	}
 	if (event.type == SDL_MOUSEBUTTONDOWN)
 	{
-		if (isHovered)
+		if (m_IsHovered)
 		{
 			if (OnClick)
 			{
@@ -59,11 +59,11 @@ void UIButton::CheckHover(const Vector2D& mousePos, const Renderer& renderer)
 {
 	if (!m_IsFixedToScreen)
 	{
-		isHovered = renderer.IsPointInWorldRect(mousePos, m_Position, width, height);
+		m_IsHovered = renderer.IsPointInWorldRect(mousePos, m_Position, m_Width, m_Height);
 	}
 	else
 	{
-		isHovered = renderer.IsPointInScreenRect(mousePos, m_Position, width, height);
+		m_IsHovered = renderer.IsPointInScreenRect(mousePos, m_Position, m_Width, m_Height);
 	}
 }
 
@@ -71,7 +71,7 @@ void UIButton::SetPosition(const Vector2D& position)
 {
 	// Translate child elements
 	Vector2D difference = position - m_Position;
-	label->SetPosition(label->GetPosition() + difference);
+	m_Label->SetPosition(m_Label->GetPosition() + difference);
 	m_Position = position;
 }
 

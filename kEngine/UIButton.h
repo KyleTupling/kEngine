@@ -25,13 +25,13 @@ public:
 	void SetHoveredColor(SDL_Color color);
 
 private:
-	int width;
-	int height;
-	SDL_Color color; 
+	int m_Width;
+	int m_Height;
+	SDL_Color m_Color; 
 	SDL_Color m_HoveredColor = { 200, 70, 160, 255 };
-	std::unique_ptr<UILabel> label;
-	TTF_Font* font;
-	bool isHovered = false;
+	std::unique_ptr<UILabel> m_Label;
+	TTF_Font* m_Font;
+	bool m_IsHovered = false;
 
 	std::function<void()> OnClick; // Store click handle function
 };
