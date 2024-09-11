@@ -43,14 +43,13 @@ TestApplication::TestApplication(const ApplicationConfig& config)
 
 	// Add button to toggle whether window is fixed to screen
 	auto pinButton = std::make_unique<UIButton>(*m_Renderer, bodyWindow->GetPosition() - Vector2D(bodyWindow->GetWidth() / 2 - 15, bodyWindow->GetHeight() / 2 - 15), 30, 30, "P", pausedFont, offBlack);
-	pinButton->SetOnClick([this]()
+	pinButton->SetOnClick([=] {
+		UIWindow* window = dynamic_cast<UIWindow*>(GetUIElement("bodyWindow"));
+		if (window)
 		{
-			UIWindow* window = dynamic_cast<UIWindow*>(GetUIElement("bodyWindow"));
-			if (window)
-			{
-				window->SetIsFixedToScreen(!window->GetIsFixedToScreen());
-			}
-		});
+			window->SetIsFixedToScreen(!window->GetIsFixedToScreen());
+		}
+	});
 	bodyWindow->AddUIElement(std::move(pinButton));
 
 	AddUIElement("sideWindow", std::make_unique<UIWindow>(*m_Renderer, Vector2D(100, config.ScreenSize.y / 2), 200, config.ScreenSize.y, "Details", pausedFont));
