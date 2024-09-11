@@ -48,6 +48,8 @@ public:
 	
 	SDL_Window& GetWindow() const { return *m_Window; }
 
+	const Vector2D& GetScreenSize() const;
+
 	ResourceManager& GetResourceManager() { return m_ResourceManager; }
 
 	static Application& Get() { return *s_Instance; }
