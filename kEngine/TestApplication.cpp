@@ -1,6 +1,8 @@
 #include "TestApplication.h"
 #include "UILabel.h"
 #include "UIWindow.h"
+#include "Utility.h"
+#include "MathFunctions.h"
 
 TestApplication::TestApplication(const ApplicationConfig& config)
 	: Application(config)
@@ -50,6 +52,8 @@ TestApplication::TestApplication(const ApplicationConfig& config)
 			}
 		});
 	bodyWindow->AddUIElement(std::move(pinButton));
+
+	AddUIElement("sideWindow", std::make_unique<UIWindow>(*m_Renderer, Vector2D(100, config.ScreenSize.y / 2), 200, config.ScreenSize.y, "Details", pausedFont));
 }
 
 TestApplication::~TestApplication()
@@ -162,6 +166,17 @@ void TestApplication::Update(double deltaTime)
 void TestApplication::Render()
 {
 	RenderUIElements();
+	SDL_Color bodyTextColor = { 255, 255, 255, 255 };
+	// TEMPORARY display body information as just text
+	for (std::size_t i = 0; i < m_Bodies.size(); i++)
+	{
+		int drawRadius = MathFunctions::clamp(m_Bodies[i]->GetRadius(), 5, 30);
+
+		m_Renderer->DrawRectOnScreen(Vector2D(20, 50 + 100 * i), drawRadius * 2, drawRadius * 2, m_Bodies[i]->GetColor());
+		m_Renderer->DrawTextOnScreen(Vector2D(60, 50 + 100 * i), "Body", GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20), {255, 255, 255, 255}, true);
+		m_Renderer->DrawTextOnScreen(Vector2D(40, 50 + 100 * i + 20), "Mass: " + Utility::ToString(m_Bodies[i]->GetMass()), GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20), {255, 255, 255, 255}, false);
+	}
+
 	RenderBodies();
 }
 
