@@ -159,3 +159,13 @@ bool Renderer::IsPointInScreenRect(const Vector2D& point, const Vector2D& rectPo
 {
 	return point.x >= rectPos.x - rectWidth / 2 && point.x <= rectPos.x + rectWidth / 2 && point.y >= rectPos.y - rectHeight / 2 && point.y <= rectPos.y + rectHeight / 2;
 }
+
+const Camera& Renderer::GetCamera() const
+{
+	return *m_Camera;
+}
+
+const Vector2D& Renderer::GetScreenSize() const
+{
+	return m_ScreenSize;
+}

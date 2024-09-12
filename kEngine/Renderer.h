@@ -96,6 +96,9 @@ public:
 	bool IsPointInWorldRect(const Vector2D& point, const Vector2D& rectPos, int rectWidth, int rectHeight) const;
 	bool IsPointInScreenRect(const Vector2D& point, const Vector2D& rectPos, int rectWidth, int rectHeight) const;
 
+	const Camera& GetCamera() const;
+	const Vector2D& GetScreenSize() const;
+
 private:
 	SDL_Renderer* m_Renderer;
 	Camera* m_Camera;
