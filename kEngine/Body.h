@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL.h>
+#include <string>
 #include <deque>
 #include <vector>
 
@@ -73,6 +74,9 @@ public:
     bool GetActive() const;
     void SetActive(bool isActive);
 
+    const std::string& GetName() const;
+    void SetName(const std::string& name);
+
     int GetRadius() const;
     void SetRadius(int radius);
 
@@ -112,6 +116,8 @@ public:
 
 private:
     bool m_IsActive = true; // Tracks whether to update instance during simulation
+
+    std::string m_Name = "Body";
 
     int m_Radius = 10;
     double m_Mass = 10;

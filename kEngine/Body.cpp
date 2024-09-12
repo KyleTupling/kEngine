@@ -104,6 +104,16 @@ void Body::SetActive(bool isActive)
     m_IsActive = isActive;
 }
 
+const std::string& Body::GetName() const
+{
+    return m_Name;
+}
+
+void Body::SetName(const std::string& name)
+{
+    m_Name = name;
+}
+
 int Body::GetRadius() const
 {
     return m_Radius;
