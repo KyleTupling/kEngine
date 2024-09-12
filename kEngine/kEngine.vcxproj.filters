@@ -80,7 +80,7 @@
     <ClInclude Include="Body.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsConstants.h">
+    <ClInclude Include="Physics.h">
       <Filter>Header Files\Math</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">

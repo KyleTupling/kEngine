@@ -159,7 +159,7 @@
     <ClInclude Include="Body.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="MathFunctions.h" />
-    <ClInclude Include="PhysicsConstants.h" />
+    <ClInclude Include="Physics.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="TestApplication.h" />
