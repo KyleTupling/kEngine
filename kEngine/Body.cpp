@@ -154,6 +154,63 @@ void Body::SetAcceleration(const Vector2D& acceleration)
     m_Acceleration = acceleration;
 }
 
+const std::vector<Vector2D> Body::ProjectPosition(int projectionCount, const std::vector<std::unique_ptr<Body>>& bodyList) const
+{
+    std::vector<Vector2D> projectedPositions;
+    float dt = 0.006f;
+
+    Vector2D currentPosition = m_Position;
+    Vector2D currentVelocity = m_Velocity;
+    Vector2D previousAcceleration = m_Acceleration;
+    Vector2D currentAcceleration = m_Acceleration;
+    Vector2D previousVelocity = currentVelocity;
+    for (size_t i = 0; i < projectionCount; i++)
+    {
+        std::vector<Physics::Force> currentForces;
+
+        for (auto& body : bodyList)
+        {
+            if (body.get() == this)
+            {
+                continue;
+            }
+
+            Vector2D force(0, 0);
+            Vector2D dir = currentPosition - body->GetPosition();
+            double dirMag = dir.GetMagnitude();
+            if (dirMag != 0) // Prevent division by zero
+            {
+                Vector2D unitDir = dir / dirMag;
+                double forceMag = (-Physics::G * m_Mass * body->GetMass()) / (dirMag * dirMag);
+                force = unitDir.Multiply(forceMag);
+            }
+            currentForces.push_back(Physics::Force(force, "Gravitational Attraction"));  
+        }
+
+        Vector2D totalForce(0, 0);
+
+        // Accumulate total force
+        for (const auto& force : currentForces)
+        {
+            totalForce = totalForce + force.vector;
+        }
+
+        // Convert to acceleration
+        previousAcceleration = currentAcceleration;
+        currentAcceleration = totalForce / m_Mass;
+
+        currentForces.clear();
+
+        Vector2D newPosition = currentPosition + currentVelocity * dt + 0.5 * previousAcceleration * dt * dt;
+        projectedPositions.push_back(newPosition);
+        
+        currentPosition = newPosition;
+        currentVelocity = currentVelocity + 0.5 * (previousAcceleration + currentAcceleration) * dt;
+    }
+
+    return projectedPositions;
+}
+
 const std::deque<Vector2D>& Body::GetPositionHistory() const
 {
     return m_PositionHistory;

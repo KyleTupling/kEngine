@@ -88,6 +88,8 @@ public:
     const Vector2D& GetAcceleration() const;
     void SetAcceleration(const Vector2D& acceleration);
 
+    const std::vector<Vector2D> ProjectPosition(int projectionCount, const std::vector<std::unique_ptr<Body>>& bodyList) const;
+
     const std::deque<Vector2D>& GetPositionHistory() const;
 
     size_t GetMaximumPosHistorySize() const;
