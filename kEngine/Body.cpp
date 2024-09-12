@@ -7,19 +7,17 @@ Body::Body(const Vector2D& pos, const Vector2D& vel) : m_Position(pos), m_Veloci
 // Using inline to optimise function calls every frame
 inline void Body::ApplyForce(const Vector2D& force)
 {
-	// Acceleration = Force / Mass
-	Vector2D acc = force.Divide(m_Mass);
-    m_Acceleration = m_Acceleration + acc;
+    m_AppliedForces.push_back(Physics::Force(force, "None"));
 }
 
 void Body::AttractBody(Body& body)
 {
-    Vector2D dir = Vector2D::Subtract(m_Position, body.GetPosition());
+    Vector2D dir = m_Position - body.GetPosition();
     double dirMag = dir.GetMagnitude();
     if (dirMag != 0) // Prevent division by zero
     {
         Vector2D unitDir = dir / dirMag;
-        double forceMag = (PhysicsConstants::G * m_Mass * body.GetMass()) / (dirMag * dirMag);
+        double forceMag = (Physics::G * m_Mass * body.GetMass()) / (dirMag * dirMag);
         Vector2D force = unitDir.Multiply(forceMag);
         body.ApplyForce(force);
     }   
@@ -28,10 +26,13 @@ void Body::AttractBody(Body& body)
 void Body::UpdatePositionHistory()
 {
     // If previous position list is empty, add current position
-    if (m_PositionHistory.size() == 0 || abs((m_Position - m_PositionHistory.back()).GetMagnitudeSqr()) > m_MinimumPreviousPosDist)
+    /*if (m_PositionHistory.size() == 0 || abs((m_Position - m_PositionHistory.back()).GetMagnitudeSqr()) > m_MinimumPreviousPosDist)
     {
         m_PositionHistory.push_back(m_Position);
-    }
+    }*/
+
+    // This change from above is currently needed for verlet
+    m_PositionHistory.push_back(m_Position);
 
     // Ensure previous position list doesn't store more than maximum amount of positions
     if (m_PositionHistory.size() > m_MaximumPosHistorySize)
@@ -40,16 +41,33 @@ void Body::UpdatePositionHistory()
     }
 }
 
+void Body::UpdateForces()
+{
+    Vector2D totalForce(0, 0);
+
+    // Accumulate total force
+    for (const auto& force : m_AppliedForces)
+    {
+        totalForce = totalForce + force.vector;
+    }
+
+    // Convert to acceleration
+    m_PreviousAcceleration = m_Acceleration;
+    m_Acceleration = totalForce / m_Mass;
+
+    m_AppliedForces.clear();
+}
+
 void Body::UpdateKinematics(double deltaTime)
 {
-    m_Velocity = m_Velocity + m_Acceleration * deltaTime;
-    m_Position = m_Position + m_Velocity * deltaTime;
-    m_Acceleration.Set(0, 0);
+    m_Position = m_Position + m_Velocity * deltaTime + 0.5 * m_PreviousAcceleration * deltaTime * deltaTime;
+    m_Velocity = m_Velocity + 0.5 * (m_PreviousAcceleration + m_Acceleration) * deltaTime;
 }
 
 void Body::Update(double deltaTime)
 {
     UpdatePositionHistory();
+    UpdateForces();
     UpdateKinematics(deltaTime);
 }
 

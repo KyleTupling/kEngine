@@ -2,11 +2,12 @@
 
 #include <SDL.h>
 #include <deque>
+#include <vector>
 
 #include "Renderer.h"
 #include "Vector2D.h"
 #include "Camera.h"
-#include "PhysicsConstants.h"
+#include "Physics.h"
 
 class Body
 {
@@ -34,7 +35,13 @@ public:
     void UpdatePositionHistory();
 
     /**
-     * Updates kinematics of body (position, velocity, acceleration).
+     Converts all currently applied forces into acceleration.
+     Clears list of applied forces.
+     */
+    void UpdateForces();
+
+    /**
+     * Updates kinematics of body using velocity verlet integration (position, velocity, acceleration).
      *
      * @param deltaTime Time passed since last frame.
      */
@@ -107,13 +114,16 @@ private:
     int m_Radius = 10;
     double m_Mass = 10;
 
+    std::vector<Physics::Force> m_AppliedForces;
+
     Vector2D m_Position;
     Vector2D m_Velocity;
     Vector2D m_Acceleration;
+    Vector2D m_PreviousAcceleration;
 
     // These names are long but I may add other history types later
     std::deque<Vector2D> m_PositionHistory; // Holds previous positions up to a maximum amount
-    size_t m_MaximumPosHistorySize = 50;
+    size_t m_MaximumPosHistorySize = 100;
     bool m_ShouldDrawPosHistory = false; // Enables drawing of previous positions trail
     int m_MinimumPreviousPosDist = 150; // The minimum distance required between last stored position and current position to allow storing of current position
 
