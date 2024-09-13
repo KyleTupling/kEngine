@@ -17,6 +17,7 @@ UIWindow::UIWindow(const Renderer& renderer, const Vector2D& position, int width
 	windowCloseButton->SetOnClick([this]() 
 		{
 			this->Close(); 
+			windowCloseButton->SetIsHovered(false);
 		});
 }
 
@@ -162,4 +163,20 @@ void UIWindow::SetIsFixedToScreen(bool isFixed)
 	{
 		element->SetIsFixedToScreen(isFixed);
 	}
+}
+
+void UIWindow::SetDrawTitle(bool shouldDraw)
+{
+	drawTitle = shouldDraw;
+}
+
+void UIWindow::SetDrawCloseButton(bool shouldDraw)
+{
+	drawCloseButton = shouldDraw;
+}
+
+void UIWindow::SetDrawTitleBar(bool shouldDraw)
+{
+	SetDrawTitle(shouldDraw);
+	SetDrawCloseButton(shouldDraw);
 }

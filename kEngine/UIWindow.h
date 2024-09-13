@@ -35,6 +35,9 @@ public:
 	void SetHeight(int h);
 	void SetBackgroundColor(const SDL_Color& color);
 	void SetIsFixedToScreen(bool isFixed) override;
+	void SetDrawTitle(bool shouldDraw);
+	void SetDrawCloseButton(bool shouldDraw);
+	void SetDrawTitleBar(bool shouldDraw);
 
 	void CheckHover(const Vector2D& mousePos, const Renderer& renderer) override;
 
