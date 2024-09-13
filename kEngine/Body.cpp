@@ -167,22 +167,22 @@ void Body::SetAcceleration(const Vector2D& acceleration)
 const std::vector<Vector2D> Body::ProjectPosition(int projectionCount, const std::vector<std::unique_ptr<Body>>& bodyList) const
 {
     std::vector<Vector2D> projectedPositions;
-    float dt = 0.006f;
+    float dt = 0.006f; // ~165fps
 
     Vector2D currentPosition = m_Position;
     Vector2D currentVelocity = m_Velocity;
     Vector2D previousAcceleration = m_Acceleration;
     Vector2D currentAcceleration = m_Acceleration;
-    Vector2D previousVelocity = currentVelocity;
     for (size_t i = 0; i < projectionCount; i++)
     {
         std::vector<Physics::Force> currentForces;
 
+        // Accumulate gravitational forces from all other bodies
         for (auto& body : bodyList)
         {
             if (body.get() == this)
             {
-                continue;
+                continue; // Don't apply gravitational force to self
             }
 
             Vector2D force(0, 0);

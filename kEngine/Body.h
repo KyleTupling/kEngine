@@ -92,6 +92,14 @@ public:
     const Vector2D& GetAcceleration() const;
     void SetAcceleration(const Vector2D& acceleration);
 
+    /**
+     * Calculates future position predicitions for a given amount of timesteps.
+     *
+     * @param projectionCount The amount of timesteps to predict position for.
+     * @param bodyList The list of bodies in the scene (that will affect this body).
+     * 
+     * @return A vector list of the projected positions (Vector2D)
+     */
     const std::vector<Vector2D> ProjectPosition(int projectionCount, const std::vector<std::unique_ptr<Body>>& bodyList) const;
 
     const std::deque<Vector2D>& GetPositionHistory() const;
