@@ -46,6 +46,10 @@ void UIButton::HandleEvent(const SDL_Event& event)
 			{
 				OnClick();
 			}
+			else
+			{
+				std::cout << "This button currently has no functionality!" << std::endl;
+			}
 		}
 	}
 }
