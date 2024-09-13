@@ -19,7 +19,7 @@ TestApplication::TestApplication(const ApplicationConfig& config)
 	// Create planet body
 	auto planetBody = std::make_unique<Body>(Vector2D(640, 150), Vector2D(400, 0));
 	planetBody->SetMass(10);
-	planetBody->SetColor({ 30, 30, 210, 255 });
+	planetBody->SetColor({ 60, 125, 210, 255 });
 	planetBody->SetHoveredColor({ 60, 60, 240, 255 });
 	planetBody->SetShouldDrawPosHistory(true);
 	planetBody->SetName("Planet");
@@ -54,14 +54,38 @@ TestApplication::TestApplication(const ApplicationConfig& config)
 	});
 	bodyWindow->AddUIElement(std::move(pinButton));
 
+	// Create details window to display information about bodies
+	TTF_Font* detailsFont = GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 18);
 	AddUIElement("sideWindow", std::make_unique<UIWindow>(*m_Renderer, Vector2D(100, config.ScreenSize.y / 2), 200, config.ScreenSize.y, "Details", pausedFont));
 	for (size_t i = 0; i < m_Bodies.size(); i++)
 	{
-		auto bodyButton = std::make_unique<UIButton>(*m_Renderer, Vector2D(100, 400 + 50 * i), 80, 40, m_Bodies[i]->GetName(), pausedFont, offBlack);
-		bodyButton->SetOnClick([=] {
-			m_Bodies[i]->SetColor({150, 40, 150, 255});
-		});
-		dynamic_cast<UIWindow*>(GetUIElement("sideWindow"))->AddUIElement(std::move(bodyButton));
+		auto bodyDetailsWindow = std::make_unique<UIWindow>(*m_Renderer, Vector2D(100, 90 + 110 * i), 200, 100, "", detailsFont);
+		bodyDetailsWindow->SetDrawTitleBar(false);
+		bodyDetailsWindow->SetBackgroundColor({ 20, 20, 20, 100 });
+
+		auto bodyIconButton = std::make_unique<UIButton>(*m_Renderer, Vector2D(30, 90 + 110 * i - 20), 40, 40, "", detailsFont, m_Bodies[i]->GetColor());
+		// Set button hover color procedurally
+		SDL_Color hoverColor = { 0, 0, 0, 255 };
+		float hoverColorMultiplier = 1.2f;
+		hoverColor.r = MathFunctions::clamp((int)std::round(m_Bodies[i]->GetColor().r * hoverColorMultiplier), 0, 255);
+		hoverColor.g = MathFunctions::clamp((int)std::round(m_Bodies[i]->GetColor().g * hoverColorMultiplier), 0, 255);
+		hoverColor.b = MathFunctions::clamp((int)std::round(m_Bodies[i]->GetColor().b * hoverColorMultiplier), 0, 255);
+		bodyIconButton->SetHoveredColor(hoverColor);
+		bodyDetailsWindow->AddUIElement(std::move(bodyIconButton));
+
+		auto bodyNameLabel = std::make_unique<UILabel>(*m_Renderer, Vector2D(100, 90 + 110 * i - 30), m_Bodies[i]->GetName(), detailsFont, white);
+		bodyDetailsWindow->AddUIElement(std::move(bodyNameLabel));
+
+		auto bodyMassLabel = std::make_unique<UILabel>(*m_Renderer, Vector2D(100, 90 + 110 * i - 10), Utility::ToString(m_Bodies[i]->GetMass()) + "kg", detailsFont, white);
+		bodyDetailsWindow->AddUIElement(std::move(bodyMassLabel));
+
+		auto gotoButton = std::make_unique<UIButton>(*m_Renderer, Vector2D(160, 90 + 110 * i + 30), 60, 30, "Goto", detailsFont, offBlack);
+		gotoButton->SetColor({ 10, 10, 10, 255 });
+		gotoButton->SetHoveredColor({ 40, 40, 40, 255 });
+
+		bodyDetailsWindow->AddUIElement(std::move(gotoButton));
+
+		dynamic_cast<UIWindow*>(GetUIElement("sideWindow"))->AddUIElement(std::move(bodyDetailsWindow));
 	}
 }
 
@@ -198,23 +222,10 @@ void TestApplication::Render()
 	RenderBodies();
 
 	RenderUIElements();
-	SDL_Color bodyTextColor = { 255, 255, 255, 255 };
 
 	if (!GetUIElement("sideWindow")->GetIsVisible())
 	{
 		m_Renderer->DrawTextOnScreen(Vector2D(m_Config.ScreenSize.x / 2, m_Config.ScreenSize.y - 20), "Press 'E' to display details panel", GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20), { 255, 255, 255, 255 }, true);
-	}
-	else
-	{
-		// TEMPORARY display body information as just text
-		for (std::size_t i = 0; i < m_Bodies.size(); i++)
-		{
-			int drawRadius = MathFunctions::clamp(m_Bodies[i]->GetRadius(), 5, 30);
-
-			m_Renderer->DrawRectOnScreen(Vector2D(20, 50 + 100 * i), drawRadius * 2, drawRadius * 2, m_Bodies[i]->GetColor());
-			m_Renderer->DrawTextOnScreen(Vector2D(40, 40 + 100 * i), m_Bodies[i]->GetName(), GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20), {255, 255, 255, 255}, false);
-			m_Renderer->DrawTextOnScreen(Vector2D(40, 50 + 100 * i + 20), "Mass: " + Utility::ToString(m_Bodies[i]->GetMass()), GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20), { 255, 255, 255, 255 }, false);
-		}
 	}
 }
 
