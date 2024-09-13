@@ -52,6 +52,7 @@ public:
 	void SetHoveredColor(const SDL_Color& color);
 
 	bool GetIsHovered() const;
+	void SetIsHovered(bool isHovered);
 
 private:
 	int m_Width;

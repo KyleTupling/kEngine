@@ -133,3 +133,8 @@ bool UIButton::GetIsHovered() const
 {
 	return m_IsHovered;
 }
+
+void UIButton::SetIsHovered(bool isHovered)
+{
+	m_IsHovered = isHovered;
+}
