@@ -9,18 +9,20 @@ TestApplication::TestApplication(const ApplicationConfig& config)
 {
 	// Create star body
 	auto starBody = std::make_unique<Body>(Vector2D(m_Config.ScreenSize.x / 2, m_Config.ScreenSize.y / 2), Vector2D(0, 0));
-	starBody->SetMass(1e18);
+	starBody->SetMass(5e17);
 	starBody->SetRadius(15);
 	starBody->SetColor({ 230, 180, 30, 255 });
 	starBody->SetHoveredColor({ 250, 210, 50, 255 });
+	starBody->SetName("Star");
 	m_Bodies.push_back(std::move(starBody));
 
 	// Create planet body
-	auto planetBody = std::make_unique<Body>(Vector2D(400, 200), Vector2D(400, 0));
+	auto planetBody = std::make_unique<Body>(Vector2D(640, 150), Vector2D(400, 0));
 	planetBody->SetMass(10);
 	planetBody->SetColor({ 30, 30, 210, 255 });
 	planetBody->SetHoveredColor({ 60, 60, 240, 255 });
 	planetBody->SetShouldDrawPosHistory(true);
+	planetBody->SetName("Planet");
 	m_Bodies.push_back(std::move(planetBody));
 
 	// Load font
@@ -32,7 +34,7 @@ TestApplication::TestApplication(const ApplicationConfig& config)
 
 	// Add paused label
 	AddUIElement("pausedLabel", std::make_unique<UILabel>(*m_Renderer, Vector2D(1280 - 100, 50), "PAUSED", pausedFont, white));
-	GetUIElement("pausedLabel")->SetIsVisible(false);
+	GetUIElement("pausedLabel")->SetIsVisible(m_IsPaused);
 
 	// Create window attached to planet body
 	AddUIElement("bodyWindow", std::make_unique<UIWindow>(*m_Renderer, Vector2D(100, 100), 200, 100, "Body", pausedFont));
@@ -53,6 +55,14 @@ TestApplication::TestApplication(const ApplicationConfig& config)
 	bodyWindow->AddUIElement(std::move(pinButton));
 
 	AddUIElement("sideWindow", std::make_unique<UIWindow>(*m_Renderer, Vector2D(100, config.ScreenSize.y / 2), 200, config.ScreenSize.y, "Details", pausedFont));
+	for (size_t i = 0; i < m_Bodies.size(); i++)
+	{
+		auto bodyButton = std::make_unique<UIButton>(*m_Renderer, Vector2D(100, 400 + 50 * i), 80, 40, m_Bodies[i]->GetName(), pausedFont, offBlack);
+		bodyButton->SetOnClick([=] {
+			m_Bodies[i]->SetColor({150, 40, 150, 255});
+		});
+		dynamic_cast<UIWindow*>(GetUIElement("sideWindow"))->AddUIElement(std::move(bodyButton));
+	}
 }
 
 TestApplication::~TestApplication()
@@ -83,6 +93,22 @@ void TestApplication::HandleEvents()
 			if (event.key.keysym.sym == SDLK_e)
 			{
 				GetUIElement("sideWindow")->SetIsVisible(true);
+			}
+
+			// TEMPORARY: Move position of planet body
+			if (event.key.keysym.sym == SDLK_q)
+			{
+				// Get mouse position
+				int mouseX, mouseY;
+				SDL_GetMouseState(&mouseX, &mouseY);
+				Vector2D worldMousePos = m_Renderer->GetCamera().ConvertScreenToWorld(Vector2D(mouseX, mouseY), m_Renderer->GetScreenSize());
+				m_Bodies[1]->SetPosition(worldMousePos);
+			}
+
+			// TEMPORARY: Toggle position projection rendering
+			if (event.key.keysym.sym == SDLK_p)
+			{
+				m_DrawPosProjection = !m_DrawPosProjection;
 			}
 		}
 
@@ -186,7 +212,7 @@ void TestApplication::Render()
 			int drawRadius = MathFunctions::clamp(m_Bodies[i]->GetRadius(), 5, 30);
 
 			m_Renderer->DrawRectOnScreen(Vector2D(20, 50 + 100 * i), drawRadius * 2, drawRadius * 2, m_Bodies[i]->GetColor());
-			m_Renderer->DrawTextOnScreen(Vector2D(60, 50 + 100 * i), "Body", GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20), { 255, 255, 255, 255 }, true);
+			m_Renderer->DrawTextOnScreen(Vector2D(40, 40 + 100 * i), m_Bodies[i]->GetName(), GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20), {255, 255, 255, 255}, false);
 			m_Renderer->DrawTextOnScreen(Vector2D(40, 50 + 100 * i + 20), "Mass: " + Utility::ToString(m_Bodies[i]->GetMass()), GetResourceManager().LoadFont("Resources/Fonts/ARIAL.TTF", 20), { 255, 255, 255, 255 }, false);
 		}
 	}
@@ -221,6 +247,15 @@ void TestApplication::UpdateBodies(double deltaTime)
 
 void TestApplication::RenderBodies() const
 {
+	if (m_DrawPosProjection)
+	{
+		std::vector<Vector2D> projectedPositions = m_Bodies[1]->ProjectPosition(1000, m_Bodies); // Project position test
+		for (auto& pos : projectedPositions)
+		{
+			m_Renderer->DrawRectInWorld(pos, 2, 2, { 255, 255, 255, 255 });
+		}
+	}
+	
 	for (const auto& body : m_Bodies)
 	{
 		body->Draw(*m_Renderer);

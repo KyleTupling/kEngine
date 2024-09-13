@@ -27,7 +27,8 @@ public:
 	void RenderUIElements() const;
 
 private:
-	bool m_IsPaused = false;
+	bool m_IsPaused = true;
+	bool m_DrawPosProjection = false;
 	std::vector<std::unique_ptr<Body>> m_Bodies;
 	std::unordered_map<std::string, std::unique_ptr<UIElement>> m_UIElements;
 };
