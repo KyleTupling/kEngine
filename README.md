@@ -7,7 +7,7 @@ C++ physics engine in early development. Currently testing planetary orbits.
 ___
 ![image](https://github.com/user-attachments/assets/691e7db4-77f9-4689-96f0-a81afa03c084)
 ---
-![image](https://github.com/user-attachments/assets/90e35cf8-10da-4fdc-a6ff-04694d681fc3)
+![image](https://github.com/user-attachments/assets/64d20344-b129-4e76-9920-5131fa144d50)
 ___
 
 ## Creating an application
