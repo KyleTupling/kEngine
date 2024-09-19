@@ -82,6 +82,9 @@ TestApplication::TestApplication(const ApplicationConfig& config)
 		auto gotoButton = std::make_unique<UIButton>(*m_Renderer, Vector2D(160, 90 + 110 * i + 30), 60, 30, "Goto", detailsFont, offBlack);
 		gotoButton->SetColor({ 10, 10, 10, 255 });
 		gotoButton->SetHoveredColor({ 40, 40, 40, 255 });
+		gotoButton->SetOnClick([=] {
+			m_TrackedBodyIndex = i;
+		});
 
 		bodyDetailsWindow->AddUIElement(std::move(gotoButton));
 
@@ -107,6 +110,8 @@ void TestApplication::HandleEvents()
 
 		if (event.type == SDL_KEYDOWN)
 		{
+			m_TrackedBodyIndex = -1;
+
 			// Pause - still render but don't update
 			if (event.key.keysym.sym == SDLK_SPACE)
 			{
@@ -254,6 +259,12 @@ void TestApplication::UpdateBodies(double deltaTime)
 	{
 		body->Update(deltaTime);
 	}
+
+	if (m_TrackedBodyIndex >= 0)
+	{
+		m_Camera.position = m_Bodies[m_TrackedBodyIndex]->GetPosition();
+	}
+	
 }
 
 void TestApplication::RenderBodies() const

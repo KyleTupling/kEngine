@@ -27,6 +27,7 @@ public:
 	void RenderUIElements() const;
 
 private:
+	int m_TrackedBodyIndex = -1;
 	bool m_IsPaused = true;
 	bool m_DrawPosProjection = false;
 	std::vector<std::unique_ptr<Body>> m_Bodies;
