@@ -66,7 +66,7 @@ void Application::Run()
 }
 
 void Application::HandleEvents()
-{
+{	
 	SDL_Event event;
 	while (SDL_PollEvent(&event))
 	{
