@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "TestApplication.h"
+#include "Applications/SanboxTestApp/SandboxTestApp.h"
 
 SDL_Color colorWhite = { 255, 255, 255, 255 };
 SDL_Color colorBlack = { 0, 0, 0, 255 };
@@ -29,11 +30,12 @@ int main(int argv, char** args)
     InitializeSDL();
 
     ApplicationConfig config;
-    config.Name = "Test";
+    config.Name = "Sandbox Test";
     config.ScreenSize = Vector2D(1280, 720);
     config.DrawCursor = true;
 
-    TestApplication* app = new TestApplication(config);
+    //TestApplication* app = new TestApplication(config);
+    SandboxTestApp* app = new SandboxTestApp(config);
     app->Run();
     Application::Shutdown();
 
