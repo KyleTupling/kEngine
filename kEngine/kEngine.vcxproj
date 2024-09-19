@@ -71,12 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(ProjectDir)external\SDL2-2.30.6\include;$(ProjectDir)external\SDL2_ttf-2.22.0-VC\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)external\SDL2-2.30.6\include;$(ProjectDir)external\SDL2_ttf-2.22.0-VC\include;$(IncludePath);$(ProjectDir)</IncludePath>
     <LibraryPath>$(ProjectDir)external\SDL2-2.30.6\lib\x64;$(ProjectDir)external\SDL2_ttf-2.22.0-VC\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>$(ProjectDir)external\SDL2-2.30.6\lib\x64;$(ProjectDir)external\SDL2_ttf-2.22.0-VC\lib\x64;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(ProjectDir)external\SDL2-2.30.6\include;$(ProjectDir)external\SDL2_ttf-2.22.0-VC\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)external\SDL2-2.30.6\include;$(ProjectDir)external\SDL2_ttf-2.22.0-VC\include;$(IncludePath);$(ProjectDir)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -145,8 +145,10 @@
     <ClCompile Include="Body.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Applications\SanboxTestApp\Rectangle.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Applications\SanboxTestApp\SandboxTestApp.cpp" />
     <ClCompile Include="TestApplication.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="UIButton.cpp" />
@@ -160,8 +162,10 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="MathFunctions.h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="Applications\SanboxTestApp\Rectangle.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="Applications\SanboxTestApp\SandboxTestApp.h" />
     <ClInclude Include="TestApplication.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="UIButton.h" />

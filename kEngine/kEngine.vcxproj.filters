@@ -69,6 +69,12 @@
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Applications\SanboxTestApp\SandboxTestApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Applications\SanboxTestApp\Rectangle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vector2D.h">
@@ -114,6 +120,12 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Applications\SanboxTestApp\SandboxTestApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Applications\SanboxTestApp\Rectangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
