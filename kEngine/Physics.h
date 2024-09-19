@@ -6,6 +6,7 @@
 namespace Physics
 {
 	const double G = 6.67e-11; // Universal gravitational constant
+	const float EarthGravity = 9.81f;
 
 	struct Force
 	{
