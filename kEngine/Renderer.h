@@ -22,6 +22,10 @@ public:
 	 */
 	void Present() const;
 
+	void DrawLineInWorld(const Vector2D& worldPosStart, const Vector2D& worldPosEnd, SDL_Color color) const;
+
+	void DrawLineOnScreen(const Vector2D& screenPosStart, const Vector2D& screenPosEnd, SDL_Color color) const;
+
 	/**
 	 * Draws a rectangle to the screen using world coorindates.
 	 *

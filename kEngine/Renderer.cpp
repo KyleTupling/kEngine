@@ -31,6 +31,20 @@ void Renderer::Present() const
 	SDL_RenderPresent(m_Renderer);
 }
 
+void Renderer::DrawLineInWorld(const Vector2D& worldPosStart, const Vector2D& worldPosEnd, SDL_Color color) const
+{
+	Vector2D screenPosStart = m_Camera->ConvertWorldToScreen(worldPosStart, m_ScreenSize);
+	Vector2D screenPosEnd = m_Camera->ConvertWorldToScreen(worldPosEnd, m_ScreenSize);
+	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
+	SDL_RenderDrawLine(m_Renderer, screenPosStart.x, screenPosStart.y, screenPosEnd.x, screenPosEnd.y);
+}
+
+void Renderer::DrawLineOnScreen(const Vector2D& screenPosStart, const Vector2D& screenPosEnd, SDL_Color color) const
+{
+	SDL_SetRenderDrawColor(m_Renderer, color.r, color.g, color.b, color.a);
+	SDL_RenderDrawLine(m_Renderer, screenPosStart.x, screenPosStart.y, screenPosEnd.x, screenPosEnd.y);
+}
+
 void Renderer::DrawRectInWorld(const Vector2D& worldPos, int width, int height, SDL_Color color) const
 {
 	Vector2D screenPos = m_Camera->ConvertWorldToScreen(worldPos, m_ScreenSize);
