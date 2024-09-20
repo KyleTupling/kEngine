@@ -1,13 +1,28 @@
 #include "Rectangle.h"
 #include "math.h"
 
-Rectangle::Rectangle(const Vector2D& position) : m_Position(position) {}
+Rectangle::Rectangle(const Vector2D& position) : m_Position(position)
+{
+	m_Velocity = Vector2D(0, 0);
+	m_CurrentForce = Vector2D(0, 0);
+	m_CurrentTorque = 0;
+}
 
 void Rectangle::Update(double deltaTime)
 {
+	m_Velocity = m_Velocity + (m_CurrentForce / m_Mass) * deltaTime;
 	m_Position = m_Position + m_Velocity * deltaTime;
 
+	float momentOfInertia = (1.0f / 12.0f) * m_Mass * (m_Width * m_Width + m_Height * m_Height);
+	float angularAcceleration = m_CurrentTorque / momentOfInertia;
+
+	std::cout << angularAcceleration << std::endl;
+
+	m_AngularVelocity += angularAcceleration * deltaTime;
 	m_Angle = m_Angle + m_AngularVelocity * deltaTime;
+
+	m_CurrentForce = Vector2D(0, 0);
+	m_CurrentTorque = 0;
 }
 
 void Rectangle::Draw(const Renderer& renderer) const
@@ -43,6 +58,20 @@ void Rectangle::Draw(const Renderer& renderer) const
 	renderer.DrawLineInWorld(topLeftCornerPos, bottomLeftCornerPos, m_Color);
 	renderer.DrawLineInWorld(topRightCornerPos, bottomRightCornerPos, m_Color);
 	renderer.DrawLineInWorld(bottomLeftCornerPos, bottomRightCornerPos, m_Color);
+}
+
+void Rectangle::ApplyForce(const Vector2D& force, const Vector2D& point)
+{
+	// Calculate vector from center of mass to point at which force was applied
+	Vector2D r = point - m_Position;
+
+	// Add linear force to force accumulator
+	m_CurrentForce = m_CurrentForce + force;
+
+	// Use 2D cross product to calculate torque
+	float torqueContribution = r.x * force.y - r.y * force.x;
+
+	m_CurrentTorque += torqueContribution;
 }
 
 const Vector2D& Rectangle::GetPosition() const

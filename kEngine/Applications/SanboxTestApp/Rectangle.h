@@ -11,6 +11,8 @@ public:
 	void Update(double deltaTime);
 	void Draw(const Renderer& renderer) const;
 
+	void ApplyForce(const Vector2D& force, const Vector2D& point);
+
 	const Vector2D& GetPosition() const;
 	void SetPosition(const Vector2D& position);
 
@@ -38,7 +40,6 @@ public:
 private:
 	Vector2D m_Position;
 	Vector2D m_Velocity;
-	Vector2D m_Acceleration;
 
 	float m_Width = 200;
 	float m_Height = 100;
@@ -47,6 +48,9 @@ private:
 	float m_AngularVelocity = 0;
 
 	float m_Mass = 10;
+
+	Vector2D m_CurrentForce;
+	float m_CurrentTorque;
 
 	SDL_Color m_Color = { 255, 255, 255, 255 };
 };
