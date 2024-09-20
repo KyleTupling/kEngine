@@ -16,8 +16,6 @@ void Rectangle::Update(double deltaTime)
 	float momentOfInertia = (1.0f / 12.0f) * m_Mass * (m_Width * m_Width + m_Height * m_Height);
 	float angularAcceleration = m_CurrentTorque / momentOfInertia;
 
-	std::cout << angularAcceleration << std::endl;
-
 	m_AngularVelocity += angularAcceleration * deltaTime;
 	m_Angle = m_Angle + m_AngularVelocity * deltaTime;
 
