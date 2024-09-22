@@ -147,6 +147,11 @@ const SDL_Color& Rectangle::GetColor() const
 	return m_Color;
 }
 
+const Vector2D& Rectangle::GetCurrentForce() const
+{
+	return m_CurrentForce;
+}
+
 void Rectangle::SetColor(const SDL_Color& color)
 {
 	m_Color = color;

@@ -34,6 +34,8 @@ public:
 	float GetMass() const;
 	void SetMass(float mass);
 
+	const Vector2D& GetCurrentForce() const;
+
 	const SDL_Color& GetColor() const;
 	void SetColor(const SDL_Color& color);
 
