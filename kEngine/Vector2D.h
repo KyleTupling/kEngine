@@ -10,14 +10,18 @@ public:
     Vector2D();
     Vector2D(double x, double y);
 
+    // Comparison operators
+    bool operator==(const Vector2D& vec) const;
+    bool operator!=(const Vector2D& vec) const;
+
     void Set(double newX, double newY);
 
     double GetMagnitude() const;
     double GetMagnitudeSqr() const;
     Vector2D GetUnitVector() const;
 
-    static Vector2D Add(Vector2D vec1, Vector2D vec2);
-    static Vector2D Subtract(Vector2D vec1, Vector2D vec2);
+    inline static double Dot(const Vector2D& vec1, const Vector2D& vec2);
+    inline static double Cross(const Vector2D& vec1, const Vector2D& vec2);
 
     // Addition with vector
     Vector2D Add(const Vector2D& vec) const;

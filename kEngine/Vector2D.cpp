@@ -5,6 +5,16 @@ Vector2D::Vector2D() : x(0.0), y(0.0) {}
 
 Vector2D::Vector2D(double x, double y) : x(x), y(y) {}
 
+bool Vector2D::operator==(const Vector2D& vec) const
+{
+    return (x == vec.x && y == vec.y);
+}
+
+bool Vector2D::operator!=(const Vector2D& vec) const
+{
+    return !(*this == vec);
+}
+
 // Set x and y values of vector instance
 void Vector2D::Set(double newX, double newY)
 {
@@ -15,14 +25,14 @@ void Vector2D::Set(double newX, double newY)
 // Returns magnitude of vector instance
 double Vector2D::GetMagnitude() const
 {
-    return std::sqrt(this->x * this->x + this->y * this->y);
+    return std::sqrt(x * x + y * y);
 }
 
 // Returns squared magnitude of vector instance
 // More efficient than GetMagnitude(), doesn't require sqrt
 double Vector2D::GetMagnitudeSqr() const
 {
-    return (this->x * this->x + this->y * this->y);
+    return x * x + y * y;
 }
 
 // Returns unit vector of vector instance
@@ -36,16 +46,14 @@ Vector2D Vector2D::GetUnitVector() const
     return Vector2D(); // Return zero vector if magnitude is zero
 }
 
-Vector2D Vector2D::Add(Vector2D vec1, Vector2D vec2)
+double Vector2D::Dot(const Vector2D& vec1, const Vector2D& vec2)
 {
-    Vector2D newVec(vec1.x + vec2.x, vec1.y + vec2.y);
-    return newVec;
+    return vec1.x * vec2.x + vec1.y * vec2.y;
 }
 
-Vector2D Vector2D::Subtract(Vector2D vec1, Vector2D vec2)
+double Vector2D::Cross(const Vector2D& vec1, const Vector2D& vec2)
 {
-    Vector2D newVec(vec1.x - vec2.x, vec1.y - vec2.y);
-    return newVec;
+    return vec1.x * vec2.y - vec1.y * vec2.x;
 }
 
 Vector2D Vector2D::Add(const Vector2D& vec) const
