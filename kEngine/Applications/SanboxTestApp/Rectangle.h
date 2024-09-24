@@ -11,6 +11,13 @@ public:
 	void Update(double deltaTime);
 	void Draw(const Renderer& renderer) const;
 
+	/**
+	 * Applies a force to the rectangle at a given point.
+	 * A linear force is applied as well as a torque contribution.
+	 *
+	 * @param force The force vector
+	 * @param point The point in space at which the force is applied
+	 */
 	void ApplyForce(const Vector2D& force, const Vector2D& point);
 
 	const Vector2D& GetPosition() const;
