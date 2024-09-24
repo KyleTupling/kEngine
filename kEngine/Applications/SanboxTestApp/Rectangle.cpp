@@ -38,6 +38,12 @@ void Rectangle::Draw(const Renderer& renderer) const
 		m_Position.y + (-(m_Width / 2) * sinAngle - (m_Height / 2) * cosAngle)
 	);
 
+	// Dot implementation
+	/*Vector2D topLeftCornerPos(
+		m_Position.x + Vector2D::Dot(m_Vertices[0], Vector2D(cosAngle, -sinAngle)),
+		m_Position.y + Vector2D::Dot(m_Vertices[0], Vector2D(sinAngle, cosAngle))
+	);*/
+
 	Vector2D topRightCornerPos(
 		m_Position.x + ((m_Width / 2) * cosAngle + (m_Height / 2) * sinAngle),
 		m_Position.y + ((m_Width / 2) * sinAngle - (m_Height / 2) * cosAngle)
