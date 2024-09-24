@@ -39,9 +39,6 @@
     <ClCompile Include="Vector2D.cpp">
       <Filter>Source Files\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Text.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Body.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -79,9 +76,6 @@
   <ItemGroup>
     <ClInclude Include="Vector2D.h">
       <Filter>Header Files\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Body.h">
       <Filter>Header Files\Core</Filter>

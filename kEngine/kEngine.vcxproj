@@ -150,7 +150,6 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Applications\SanboxTestApp\SandboxTestApp.cpp" />
     <ClCompile Include="TestApplication.cpp" />
-    <ClCompile Include="Text.cpp" />
     <ClCompile Include="UIButton.cpp" />
     <ClCompile Include="UILabel.cpp" />
     <ClCompile Include="UIWindow.cpp" />
@@ -167,7 +166,6 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Applications\SanboxTestApp\SandboxTestApp.h" />
     <ClInclude Include="TestApplication.h" />
-    <ClInclude Include="Text.h" />
     <ClInclude Include="UIButton.h" />
     <ClInclude Include="UIElement.h" />
     <ClInclude Include="UILabel.h" />
