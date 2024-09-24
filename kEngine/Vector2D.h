@@ -20,8 +20,14 @@ public:
     double GetMagnitudeSqr() const;
     Vector2D GetUnitVector() const;
 
-    inline static double Dot(const Vector2D& vec1, const Vector2D& vec2);
-    inline static double Cross(const Vector2D& vec1, const Vector2D& vec2);
+    inline static double Dot(const Vector2D& vec1, const Vector2D& vec2)
+    {
+        return vec1.x * vec2.x + vec1.y * vec2.y;
+    }
+    inline static double Cross(const Vector2D& vec1, const Vector2D& vec2)
+    {
+        return vec1.x * vec2.y - vec1.y * vec2.x;
+    }
 
     // Addition with vector
     Vector2D Add(const Vector2D& vec) const;

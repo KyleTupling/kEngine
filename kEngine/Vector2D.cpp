@@ -46,16 +46,6 @@ Vector2D Vector2D::GetUnitVector() const
     return Vector2D(); // Return zero vector if magnitude is zero
 }
 
-double Vector2D::Dot(const Vector2D& vec1, const Vector2D& vec2)
-{
-    return vec1.x * vec2.x + vec1.y * vec2.y;
-}
-
-double Vector2D::Cross(const Vector2D& vec1, const Vector2D& vec2)
-{
-    return vec1.x * vec2.y - vec1.y * vec2.x;
-}
-
 Vector2D Vector2D::Add(const Vector2D& vec) const
 {
     return Vector2D(this->x + vec.x, this->y + vec.y);
