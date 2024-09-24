@@ -46,6 +46,8 @@ private:
 	float m_Width = 200;
 	float m_Height = 100;
 
+	Vector2D m_Vertices[4];
+
 	float m_Angle = 0;
 	float m_AngularVelocity = 0;
 

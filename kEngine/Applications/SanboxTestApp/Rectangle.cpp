@@ -3,6 +3,11 @@
 
 Rectangle::Rectangle(const Vector2D& position) : m_Position(position)
 {
+	m_Vertices[0] = Vector2D(-m_Width / 2, -m_Height / 2);
+	m_Vertices[1] = Vector2D(m_Width / 2, -m_Height / 2);
+	m_Vertices[2] = Vector2D(m_Width / 2, m_Height / 2);
+	m_Vertices[3] = Vector2D(-m_Width / 2, m_Height);
+
 	m_Velocity = Vector2D(0, 0);
 	m_CurrentForce = Vector2D(0, 0);
 	m_CurrentTorque = 0;
