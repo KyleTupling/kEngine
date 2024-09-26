@@ -41,6 +41,8 @@ public:
 	float GetMass() const;
 	void SetMass(float mass);
 
+	float GetInverseMass() const;
+
 	const Vector2D& GetCurrentForce() const;
 
 	const SDL_Color& GetColor() const;
@@ -59,6 +61,7 @@ private:
 	float m_AngularVelocity = 0;
 
 	float m_Mass = 10;
+	float m_InverseMass = 1 / m_Mass;
 
 	Vector2D m_CurrentForce;
 	float m_CurrentTorque;
