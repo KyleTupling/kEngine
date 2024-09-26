@@ -5,8 +5,11 @@
 
 namespace Physics
 {
-	const double G = 6.67e-11; // Universal gravitational constant
-	const float EarthGravity = 9.81f;
+	constexpr double G = 6.67e-11; // Universal gravitational constant
+	constexpr float EarthGravity = 9.81f;
+
+	constexpr float PI = 3.1415926535f;
+	constexpr float TWO_PI = 2 * PI;
 
 	struct Force
 	{
