@@ -1,5 +1,6 @@
 #include "Rectangle.h"
 #include "math.h"
+#include "Physics.h"
 
 Rectangle::Rectangle(const Vector2D& position) : m_Position(position)
 {
@@ -15,7 +16,7 @@ Rectangle::Rectangle(const Vector2D& position) : m_Position(position)
 
 void Rectangle::Update(double deltaTime)
 {
-	m_Velocity = m_Velocity + (m_CurrentForce / m_Mass) * deltaTime;
+	m_Velocity = m_Velocity + (m_CurrentForce * m_InverseMass) * deltaTime;
 	m_Position = m_Position + m_Velocity * deltaTime;
 
 	float momentOfInertia = (1.0f / 12.0f) * m_Mass * (m_Width * m_Width + m_Height * m_Height);
@@ -23,6 +24,14 @@ void Rectangle::Update(double deltaTime)
 
 	m_AngularVelocity += angularAcceleration * deltaTime;
 	m_Angle = m_Angle + m_AngularVelocity * deltaTime;
+	if (m_Angle > Physics::TWO_PI)
+	{
+		m_Angle -= Physics::TWO_PI;
+	}
+	if (m_Angle < -Physics::TWO_PI)
+	{
+		m_Angle += Physics::TWO_PI;
+	}
 
 	m_CurrentForce = Vector2D(0, 0);
 	m_CurrentTorque = 0;
@@ -151,6 +160,12 @@ float Rectangle::GetMass() const
 void Rectangle::SetMass(float mass)
 {
 	m_Mass = mass;
+	m_InverseMass = 1 / m_Mass;
+}
+
+float Rectangle::GetInverseMass() const
+{
+	return m_InverseMass;
 }
 
 const SDL_Color& Rectangle::GetColor() const
