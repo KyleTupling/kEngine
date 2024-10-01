@@ -5,10 +5,6 @@
 #include "TestApplication.h"
 #include "Applications/SanboxTestApp/SandboxTestApp.h"
 
-SDL_Color colorWhite = { 255, 255, 255, 255 };
-SDL_Color colorBlack = { 0, 0, 0, 255 };
-SDL_Color colorGrey = { 100, 100, 100, 255 };
-
 bool InitializeSDL()
 {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0)
