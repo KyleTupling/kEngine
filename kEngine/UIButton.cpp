@@ -1,6 +1,5 @@
 #include "UIButton.h"
-
-extern SDL_Color colorWhite;
+#include "Graphics/Color.h"
 
 UIButton::UIButton(const Renderer& renderer, const Vector2D& position, int w, int h, const std::string& text, TTF_Font* font, SDL_Color color)
 	: m_Color(color)
@@ -9,7 +8,7 @@ UIButton::UIButton(const Renderer& renderer, const Vector2D& position, int w, in
 	m_Width = w;
 	m_Height = h;
 
-	m_Label = std::make_unique<UILabel>(renderer, m_Position, text, font, colorWhite);
+	m_Label = std::make_unique<UILabel>(renderer, m_Position, text, font, Color::White);
 }
 
 void UIButton::Draw(const Renderer& renderer)

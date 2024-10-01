@@ -1,7 +1,5 @@
 #include "UIWindow.h"
-
-extern SDL_Color colorWhite;
-extern SDL_Color colorBlack;
+#include "Graphics/Color.h"
 
 UIWindow::UIWindow(const Renderer& renderer, const Vector2D& position, int width, int height, const std::string& title, TTF_Font* font)
 	: width(width), height(height)
@@ -9,10 +7,10 @@ UIWindow::UIWindow(const Renderer& renderer, const Vector2D& position, int width
 	m_Position = position;
 
 	// Does this need to be a unique pointer?
-	windowTitleLabel = std::make_unique<UILabel>(renderer, Vector2D(m_Position.x, m_Position.y - height / 2 + 15), title, font, colorWhite, colorBlack);
+	windowTitleLabel = std::make_unique<UILabel>(renderer, Vector2D(m_Position.x, m_Position.y - height / 2 + 15), title, font, Color::White, Color::Black);
 	
 	// Create close button
-	windowCloseButton = std::make_unique<UIButton>(renderer, m_Position + Vector2D(width / 2 - 15, 15 - height / 2), 30, 30, "X", font, colorBlack);
+	windowCloseButton = std::make_unique<UIButton>(renderer, m_Position + Vector2D(width / 2 - 15, 15 - height / 2), 30, 30, "X", font, Color::Black);
 	windowCloseButton->SetHoveredColor({ 255, 0, 0, 255 });
 	windowCloseButton->SetOnClick([this]() 
 		{
