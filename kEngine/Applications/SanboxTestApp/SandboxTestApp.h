@@ -14,5 +14,6 @@ public:
 	void Render() override;
 private:
 	Rectangle* testRect = nullptr;
+	Rectangle* testRect2 = nullptr;
 };
 

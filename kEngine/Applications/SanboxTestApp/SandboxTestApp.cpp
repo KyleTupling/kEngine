@@ -6,12 +6,17 @@ SandboxTestApp::SandboxTestApp(const ApplicationConfig& config)
 {
 	testRect = new Rectangle(Vector2D(500, 300));
 	testRect->SetColor({ 240, 30, 100, 255 });
+
+	testRect2 = new Rectangle(Vector2D(650, 300));
 }
 
 SandboxTestApp::~SandboxTestApp()
 {
 	delete testRect;
 	testRect = nullptr;
+
+	delete testRect2;
+	testRect2 = nullptr;
 }
 
 void SandboxTestApp::HandleEvents()
@@ -46,6 +51,15 @@ void SandboxTestApp::Update(double deltaTime)
 		testRect->ApplyForce(Vector2D(0, 400), mousePos);
 	}
 
+	if (Rectangle::CheckCollisionSAT(*testRect, *testRect2))
+	{
+		testRect2->SetColor({ 0, 200, 200, 255 });
+	}
+	else
+	{
+		testRect2->SetColor({ 255, 255, 255, 255 });
+	}
+
 	// For testing angular acceleration due to gravity
 	float rectWidth = testRect->GetWidth();
 	float rectHeight = testRect->GetHeight();
@@ -75,4 +89,5 @@ void SandboxTestApp::Render()
 
 	m_Renderer->DrawLineInWorld(Vector2D(0, m_Config.ScreenSize.y), Vector2D(m_Config.ScreenSize.x, m_Config.ScreenSize.y), {255, 255, 255, 255});
 	testRect->Draw(*m_Renderer);
+	testRect2->Draw(*m_Renderer);
 }
