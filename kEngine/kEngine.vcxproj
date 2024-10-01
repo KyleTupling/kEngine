@@ -159,6 +159,7 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="Body.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Graphics\Color.h" />
     <ClInclude Include="MathFunctions.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Applications\SanboxTestApp\Rectangle.h" />
