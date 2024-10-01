@@ -1,4 +1,5 @@
 #include "SandboxTestApp.h"
+#include "Utility.h"
 
 SandboxTestApp::SandboxTestApp(const ApplicationConfig& config)
 	: Application(config)
@@ -69,8 +70,9 @@ void SandboxTestApp::Update(double deltaTime)
 void SandboxTestApp::Render()
 {
 	m_Renderer->DrawTextOnScreen(Vector2D(20, 20), "SandboxTestApp", ResourceManager::GetInstance().LoadFont("Resources/Fonts/ARIAL.TTF", 24), { 255, 255, 255, 255 }, false);
-	m_Renderer->DrawTextOnScreen(Vector2D(20, 60), "Store vertex positions in rectangle for collisions?", ResourceManager::GetInstance().LoadFont("Resources/Fonts/ARIAL.TTF", 18), { 255, 255, 255, 255 }, false);
-	
+	std::string angleStr = "Rect angle: " + Utility::ToString(testRect->GetAngle()) + "rad";
+	m_Renderer->DrawTextOnScreen(Vector2D(20, 100), angleStr, ResourceManager::GetInstance().LoadFont("Resources/Fonts/ARIAL.TTF", 18), {255, 255, 255, 255}, false);
+
 	m_Renderer->DrawLineInWorld(Vector2D(0, m_Config.ScreenSize.y), Vector2D(m_Config.ScreenSize.x, m_Config.ScreenSize.y), {255, 255, 255, 255});
 	testRect->Draw(*m_Renderer);
 }
