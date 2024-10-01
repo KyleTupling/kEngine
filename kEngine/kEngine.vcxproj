@@ -142,7 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Body.cpp" />
+    <ClCompile Include="Applications\TestApplication\Body.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Applications\SanboxTestApp\Rectangle.cpp" />
@@ -157,7 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="Body.h" />
+    <ClInclude Include="Applications\TestApplication\Body.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Graphics\Color.h" />
     <ClInclude Include="MathFunctions.h" />
