@@ -60,7 +60,7 @@
     <ClCompile Include="Application.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="TestApplication.cpp">
+    <ClCompile Include="Applications\TestApplication\TestApplication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
@@ -107,7 +107,7 @@
     <ClInclude Include="Application.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="TestApplication.h">
+    <ClInclude Include="Applications\TestApplication\TestApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Utility.h">
