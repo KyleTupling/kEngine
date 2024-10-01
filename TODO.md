@@ -21,6 +21,9 @@
 - [x] Use distance scaling through world->screen conversions to allow for use of real physical values?
 - [x] Refactor Body class to src
 
+#### Application Class
+- [ ] Create event dispatch system so user-end is easier and cleaner
+
 #### Camera
 - [x] Implement Camera system (allow for movement around scene and zoom - potential savings if culling used)
 - [x] Refactor zoom to use linear interpolation towards a target zoom
