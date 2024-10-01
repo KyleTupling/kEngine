@@ -2,6 +2,7 @@
 
 #include "Vector2D.h"
 #include "Renderer.h"
+#include <array>
 
 class Rectangle
 {
@@ -10,6 +11,8 @@ public:
 
 	void Update(double deltaTime);
 	void Draw(const Renderer& renderer) const;
+
+	static bool CheckCollisionSAT(const Rectangle& rectA, const Rectangle& rectB);
 
 	/**
 	 * Applies a force to the rectangle at a given point.
@@ -31,6 +34,9 @@ public:
 
 	float GetHeight() const;
 	void SetHeight(float height);
+
+	const Vector2D* GetVertices() const;
+	std::array<Vector2D, 4> GetTransformedVertices() const;
 
 	float GetAngle() const;
 	void SetAngle(float angle);

@@ -80,6 +80,64 @@ void Rectangle::Draw(const Renderer& renderer) const
 	renderer.DrawLineInWorld(bottomLeftCornerPos, bottomRightCornerPos, m_Color);
 }
 
+bool Rectangle::CheckCollisionSAT(const Rectangle& rectA, const Rectangle& rectB)
+{
+	// Get vertices of both Rectangles
+	std::array<Vector2D, 4> verticesA = rectA.GetTransformedVertices();
+	std::array<Vector2D, 4> verticesB = rectB.GetTransformedVertices();
+
+	// Array for all axes (4 from each edge of each Rectangle, 8 total)
+	Vector2D axes[8];
+
+	// Compute edge normals (rectA)
+	for (size_t i = 0; i < 4; i++)
+	{
+		Vector2D edge = verticesA[(i + 1) % 4] - verticesA[i];
+		axes[i] = Vector2D(-edge.y, edge.x).GetUnitVector();
+	}
+
+	// Compute edge normals (rectB)
+	for (size_t i = 0; i < 4; i++)
+	{
+		Vector2D edge = verticesB[(i + 1) % 4] - verticesB[i];
+		axes[i + 4] = Vector2D(-edge.y, edge.x).GetUnitVector();
+	}
+
+	// Loop through all axes to check separation
+	for (size_t i = 0; i < 8; i++)
+	{
+		float minA = Vector2D::Dot(verticesA[0], axes[i]);
+		float maxA = minA;
+		float minB = Vector2D::Dot(verticesB[0], axes[i]);
+		float maxB = minB;
+
+		minA = maxA = Vector2D::Dot(verticesA[0], axes[i]);
+		for (size_t j = 1; j < 4; j++)
+		{
+			float projection = Vector2D::Dot(verticesA[j], axes[i]);
+			if (projection < minA) minA = projection;
+			if (projection > maxA) maxA = projection;
+		}
+
+		minB = maxB = Vector2D::Dot(verticesB[0], axes[i]);
+		for (size_t j = 1; j < 4; j++)
+		{
+			float projection = Vector2D::Dot(verticesB[j], axes[i]);
+			if (projection < minB) minB = projection;
+			if (projection > maxB) maxB = projection;
+		}
+
+		// Check for overlap between projections
+		if (maxA < minB || maxB < minA)
+		{
+			// If there's no overlap on the axis, there's no collision
+			return false;
+		}
+	}
+
+	return true;
+}
+
 void Rectangle::ApplyForce(const Vector2D& force, const Vector2D& point)
 {
 	// Calculate vector from center of mass to point at which force was applied
@@ -132,6 +190,41 @@ float Rectangle::GetHeight() const
 void Rectangle::SetHeight(float height)
 {
 	m_Height = height;
+}
+
+const Vector2D* Rectangle::GetVertices() const
+{
+	return m_Vertices;
+}
+
+std::array<Vector2D, 4> Rectangle::GetTransformedVertices() const
+{
+	std::array<Vector2D, 4> transformedVertices;
+
+	float cosAngle = cos(m_Angle);
+	float sinAngle = sin(m_Angle);
+
+	transformedVertices[0] = Vector2D(
+		m_Position.x + (-(m_Width / 2) * cosAngle + (m_Height / 2) * sinAngle),
+		m_Position.y + (-(m_Width / 2) * sinAngle - (m_Height / 2) * cosAngle)
+	);
+
+	transformedVertices[1] = Vector2D(
+		m_Position.x + ((m_Width / 2) * cosAngle + (m_Height / 2) * sinAngle),
+		m_Position.y + ((m_Width / 2) * sinAngle - (m_Height / 2) * cosAngle)
+	);
+
+	transformedVertices[2] = Vector2D(
+		m_Position.x + (-(m_Width / 2) * cosAngle - (m_Height / 2) * sinAngle),
+		m_Position.y + (-(m_Width / 2) * sinAngle + (m_Height / 2) * cosAngle)
+	);
+
+	transformedVertices[3] = Vector2D(
+		m_Position.x + ((m_Width / 2) * cosAngle - (m_Height / 2) * sinAngle),
+		m_Position.y + ((m_Width / 2) * sinAngle + (m_Height / 2) * cosAngle)
+	);
+
+	return transformedVertices;
 }
 
 float Rectangle::GetAngle() const
