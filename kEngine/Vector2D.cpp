@@ -41,7 +41,7 @@ Vector2D Vector2D::GetUnitVector() const
     double mag = GetMagnitude();
     if (mag != 0) // Prevent division by zero
     {
-        return Divide(mag);
+        return Vector2D(x / mag, y / mag);
     }
     return Vector2D(); // Return zero vector if magnitude is zero
 }
