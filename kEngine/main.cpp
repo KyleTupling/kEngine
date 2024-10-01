@@ -2,7 +2,7 @@
 #include <SDL_ttf.h>
 #include <iostream>
 
-#include "TestApplication.h"
+#include "Applications/TestApplication/TestApplication.h"
 #include "Applications/SanboxTestApp/SandboxTestApp.h"
 
 bool InitializeSDL()
