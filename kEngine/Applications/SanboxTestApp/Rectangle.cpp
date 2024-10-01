@@ -24,6 +24,8 @@ void Rectangle::Update(double deltaTime)
 
 	m_AngularVelocity += angularAcceleration * deltaTime;
 	m_Angle = m_Angle + m_AngularVelocity * deltaTime;
+
+	// Resolve angle to stay between -2PI and 2PI
 	if (m_Angle > Physics::TWO_PI)
 	{
 		m_Angle -= Physics::TWO_PI;
