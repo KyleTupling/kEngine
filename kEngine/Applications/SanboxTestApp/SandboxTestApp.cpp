@@ -85,7 +85,9 @@ void SandboxTestApp::Update(double deltaTime)
 	// Apply upwards force if rectangle falls to bottom of screen
 	if (testRect->GetPosition().y + testRect->GetHeight() / 2 >= m_Config.ScreenSize.y)
 	{
-		testRect->ApplyForce(Vector2D(0, -10000), testRect->GetPosition());
+		// TEMPORARY: Calculate impulse force on contact with boundary
+		Vector2D resolveForce = testRect->GetVelocity() * testRect->GetMass() * -1 / deltaTime;
+		testRect->ApplyForce(resolveForce, testRect->GetPosition());
 	}
 	testRect->Update(deltaTime);
 }
