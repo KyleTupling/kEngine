@@ -35,11 +35,22 @@ void SandboxTestApp::HandleEvents()
 			if (event.wheel.y > 0 && m_Camera.targetZoom < m_Camera.maxZoom) m_Camera.targetZoom += event.wheel.y * 0.5;
 			else if (event.wheel.y < 0 && m_Camera.targetZoom > m_Camera.minZoom) m_Camera.targetZoom += event.wheel.y * 0.5;
 		}
+
+		if (event.type == SDL_KEYDOWN)
+		{
+			if (event.key.keysym.sym == SDLK_SPACE)
+			{
+				m_IsPaused = !m_IsPaused;
+			}
+		}
 	}
 }
 
 void SandboxTestApp::Update(double deltaTime)
 {
+	m_Camera.Update(deltaTime);
+	if (m_IsPaused) return;
+
 	const Uint8* keyboardState = SDL_GetKeyboardState(NULL);
 	// Apply downwards 400N force on rectangle at mouse position
 	if (keyboardState[SDL_SCANCODE_Q])
@@ -77,15 +88,22 @@ void SandboxTestApp::Update(double deltaTime)
 		testRect->ApplyForce(Vector2D(0, -10000), testRect->GetPosition());
 	}
 	testRect->Update(deltaTime);
-
-	m_Camera.Update(deltaTime);
 }
 
 void SandboxTestApp::Render()
 {
+	if (m_IsPaused)
+	{
+		m_Renderer->DrawTextOnScreen(Vector2D(m_Config.ScreenSize.x - 150, 20), "PAUSED", ResourceManager::GetInstance().LoadFont("Resources/Fonts/ARIAL.TTF", 24), { 255, 255, 255, 255 }, false);
+	}
+
 	m_Renderer->DrawTextOnScreen(Vector2D(20, 20), "SandboxTestApp", ResourceManager::GetInstance().LoadFont("Resources/Fonts/ARIAL.TTF", 24), { 255, 255, 255, 255 }, false);
-	std::string angleStr = "Rect angle: " + Utility::ToString(testRect->GetAngle()) + "rad";
+	std::string angleStr = "Rect1 angle: " + Utility::ToString(testRect->GetAngle()) + "rad";
 	m_Renderer->DrawTextOnScreen(Vector2D(20, 100), angleStr, ResourceManager::GetInstance().LoadFont("Resources/Fonts/ARIAL.TTF", 18), {255, 255, 255, 255}, false);
+
+	std::string collisionStr = "Rectangles colliding: ";
+	std::string collisionStateStr = Rectangle::CheckCollisionSAT(*testRect, *testRect2) ? "TRUE" : "FALSE";
+	m_Renderer->DrawTextOnScreen(Vector2D(20, 140), collisionStr + collisionStateStr, ResourceManager::GetInstance().LoadFont("Resources/Fonts/ARIAL.TTF", 18), { 255, 255, 255, 255 }, false);
 
 	m_Renderer->DrawLineInWorld(Vector2D(0, m_Config.ScreenSize.y), Vector2D(m_Config.ScreenSize.x, m_Config.ScreenSize.y), {255, 255, 255, 255});
 	testRect->Draw(*m_Renderer);

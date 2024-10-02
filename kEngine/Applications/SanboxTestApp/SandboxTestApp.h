@@ -13,6 +13,8 @@ public:
 	void Update(double deltaTime) override;
 	void Render() override;
 private:
+	bool m_IsPaused = false;
+
 	Rectangle* testRect = nullptr;
 	Rectangle* testRect2 = nullptr;
 };
