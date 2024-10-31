@@ -262,9 +262,12 @@ void TestApplication::UpdateBodies(double deltaTime)
 
 	if (m_TrackedBodyIndex >= 0)
 	{
-		m_Camera.position = m_Bodies[m_TrackedBodyIndex]->GetPosition();
+		if (m_Bodies[m_TrackedBodyIndex])
+		{
+			m_Camera.position = m_Bodies[m_TrackedBodyIndex]->GetPosition();
+		}
+		
 	}
-	
 }
 
 void TestApplication::RenderBodies() const
