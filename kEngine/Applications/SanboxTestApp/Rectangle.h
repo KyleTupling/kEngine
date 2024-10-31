@@ -29,6 +29,8 @@ public:
 	const Vector2D& GetVelocity() const;
 	void SetVelocity(const Vector2D& velocity);
 
+	const Vector2D& GetPreviousVelocity() const;
+
 	float GetWidth() const;
 	void SetWidth(float width);
 
@@ -57,6 +59,7 @@ public:
 private:
 	Vector2D m_Position;
 	Vector2D m_Velocity;
+	Vector2D m_PreviousVelocity;
 
 	float m_Width = 200;
 	float m_Height = 100;

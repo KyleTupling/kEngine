@@ -10,12 +10,14 @@ Rectangle::Rectangle(const Vector2D& position) : m_Position(position)
 	m_Vertices[3] = Vector2D(-m_Width / 2, m_Height);
 
 	m_Velocity = Vector2D(0, 0);
+	m_PreviousVelocity = Vector2D(0, 0);
 	m_CurrentForce = Vector2D(0, 0);
 	m_CurrentTorque = 0;
 }
 
 void Rectangle::Update(double deltaTime)
 {
+	m_PreviousVelocity = m_Velocity;
 	m_Velocity = m_Velocity + (m_CurrentForce * m_InverseMass) * deltaTime;
 	m_Position = m_Position + m_Velocity * deltaTime;
 
@@ -170,6 +172,11 @@ const Vector2D& Rectangle::GetVelocity() const
 void Rectangle::SetVelocity(const Vector2D& velocity)
 {
 	m_Velocity = velocity;
+}
+
+const Vector2D& Rectangle::GetPreviousVelocity() const
+{
+	return m_PreviousVelocity;
 }
 
 float Rectangle::GetWidth() const
