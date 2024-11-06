@@ -16,7 +16,7 @@ public:
 	virtual ~PhysicsObject() = default;
 
 	virtual void Update(double deltaTime);
-	virtual void Draw(const Renderer& renderer) = 0;
+	virtual void Draw(const Renderer& renderer) {};
 
 	void ApplyForce(const Vector2D& force, const Vector2D& point);
 
@@ -33,7 +33,7 @@ public:
 
 	float GetInverseMass() const;
 
-	virtual float GetMomentOfInertia() const = 0;
+	virtual float GetMomentOfInertia() { return 1.0f; };
 
 	PhysicsType GetType() const;
 protected:

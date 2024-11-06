@@ -27,8 +27,3 @@ std::shared_ptr<PhysicsObject> PhysicsObjectManager::AddPhysicsObject(PhysicsTyp
 	m_PhysicsObjectsToAdd.push_back(object);
 	return object;
 }
-
-PhysicsObjectVector& PhysicsObjectManager::GetPhysicsObjects() const
-{
-	// TODO: insert return statement here
-}

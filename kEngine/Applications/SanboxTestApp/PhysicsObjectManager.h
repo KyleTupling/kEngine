@@ -19,8 +19,6 @@ public:
 	void Update();
 
 	std::shared_ptr<PhysicsObject> AddPhysicsObject(PhysicsType type, const Vector2D& position);
-
-	PhysicsObjectVector& GetPhysicsObjects() const;
 private:
 	PhysicsObjectVector m_PhysicsObjects;
 	PhysicsObjectVector m_PhysicsObjectsToAdd;
