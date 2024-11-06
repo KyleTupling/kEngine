@@ -20,6 +20,8 @@ public:
 
 	void ApplyForce(const Vector2D& force, const Vector2D& point);
 
+	bool ShouldBeRemoved() const;
+
 	const Vector2D& GetPosition() const;
 	void SetPosition(const Vector2D& position);
 
@@ -36,6 +38,9 @@ public:
 	PhysicsType GetType() const;
 protected:
 	PhysicsType m_Type;
+
+	// If set to true, PhysicsObject will be removed on next update
+	bool m_ShouldBeRemoved = false;
 
 	Vector2D m_Position;
 	Vector2D m_Velocity;

@@ -48,6 +48,11 @@ void PhysicsObject::ApplyForce(const Vector2D& force, const Vector2D& point)
 	m_CurrentTorque += torqueContribution;
 }
 
+bool PhysicsObject::ShouldBeRemoved() const
+{
+	return m_ShouldBeRemoved;
+}
+
 const Vector2D& PhysicsObject::GetPosition() const
 {
 	return m_Position;
