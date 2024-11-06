@@ -40,13 +40,13 @@ void Camera::Update(double deltaTime)
 	{
 		float zoomStep = zoomLerpSpeed * deltaTime;
 
-		if (fabs(targetZoom - zoom) < zoomStep)
+		if (std::abs(targetZoom - zoom) < 0.005f)
 		{
 			zoom = targetZoom; // Directly set zoom to target if close
 		}
 		else {
-			// Linearly interpolate
-			zoom += (targetZoom - zoom) * (zoomLerpSpeed * deltaTime);
+			// Interpolate zoom
+			zoom = MathFunctions::ExpLerp(zoom, targetZoom, zoomStep);
 		}
 
 		// Clamp zoom
