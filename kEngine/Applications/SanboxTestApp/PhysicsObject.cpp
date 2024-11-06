@@ -58,6 +58,16 @@ void PhysicsObject::SetPosition(const Vector2D& position)
 	m_Position = position;
 }
 
+const Vector2D& PhysicsObject::GetVelocity() const
+{
+	return m_Velocity;
+}
+
+void PhysicsObject::SetVelocity(const Vector2D& velocity)
+{
+	m_Velocity = velocity;
+}
+
 float PhysicsObject::GetMass() const
 {
 	if (m_Type == PhysicsType::Static)
@@ -75,4 +85,14 @@ void PhysicsObject::SetMass(float mass)
 	}
 	m_Mass = mass;
 	m_InverseMass = (mass != 0) ? 1.0f / mass : 0.0f;
+}
+
+float PhysicsObject::GetInverseMass() const
+{
+	return m_InverseMass;
+}
+
+PhysicsType PhysicsObject::GetType() const
+{
+	return m_Type;
 }

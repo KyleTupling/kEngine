@@ -40,13 +40,13 @@ protected:
 	Vector2D m_Position;
 	Vector2D m_Velocity;
 
-	float m_Angle;
-	float m_AngularVelocity;
+	float m_Angle = 0;
+	float m_AngularVelocity = 0.0f;
 
-	float m_Mass;
-	float m_InverseMass;
+	float m_Mass = 1.0f;
+	float m_InverseMass = 1.0f;
 
-	Vector2D m_CurrentForce;
-	float m_CurrentTorque;
+	Vector2D m_CurrentForce{ 0, 0 };
+	float m_CurrentTorque = 0.0f;
 };
 
