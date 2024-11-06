@@ -147,6 +147,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Applications\SanboxTestApp\Rectangle.cpp" />
     <ClCompile Include="Applications\SanboxTestApp\PhysicsObject.cpp" />
+    <ClCompile Include="Applications\SanboxTestApp\PhysicsObjectManager.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Applications\SanboxTestApp\SandboxTestApp.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Applications\SanboxTestApp\Rectangle.h" />
     <ClInclude Include="Applications\SanboxTestApp\PhysicsObject.h" />
+    <ClInclude Include="Applications\SanboxTestApp\PhysicsObjectManager.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Applications\SanboxTestApp\SandboxTestApp.h" />

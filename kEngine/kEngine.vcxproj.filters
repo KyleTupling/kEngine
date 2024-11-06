@@ -75,6 +75,9 @@
     <ClCompile Include="Applications\SanboxTestApp\PhysicsObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Applications\SanboxTestApp\PhysicsObjectManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vector2D.h">
@@ -129,6 +132,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Applications\SanboxTestApp\PhysicsObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Applications\SanboxTestApp\PhysicsObjectManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
